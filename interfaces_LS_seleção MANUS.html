@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interfaces Digitais para Línguas de Sinais — Análise Bibliométrica</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #1a56db;
+      --primary-dark: #1e429f;
+      --accent: #0ea5e9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --tag-bg: #eff6ff;
+      --tag-color: #1d4ed8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #1a56db 0%, #0ea5e9 100%);
+      color: white;
+      padding: 3rem 2rem 2rem;
+      text-align: center;
+    }
+    header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    header p { font-size: 1.05rem; opacity: 0.9; max-width: 700px; margin: 0 auto; }
+    .header-meta {
+      display: flex; justify-content: center; gap: 2rem;
+      margin-top: 1.5rem; flex-wrap: wrap;
+    }
+    .header-meta span {
+      background: rgba(255,255,255,0.2);
+      border-radius: 999px;
+      padding: 0.3rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    /* NAV TABS */
+    nav {
+      background: white;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0 1rem;
+      flex-wrap: wrap;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    nav button {
+      background: none; border: none; cursor: pointer;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem; font-weight: 600;
+      color: var(--muted);
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    nav button:hover { color: var(--primary); }
+    nav button.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    /* MAIN */
+    main { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+
+    /* SECTION */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* STATS GRID */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+      border-top: 4px solid var(--primary);
+    }
+    .stat-card .num { font-size: 2.5rem; font-weight: 800; color: var(--primary); }
+    .stat-card .label { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* CHARTS */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .chart-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+    }
+    .chart-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+    .chart-card canvas { max-height: 280px; }
+
+    /* ARTICLE CARDS */
+    .filter-bar {
+      display: flex; gap: 0.75rem; flex-wrap: wrap;
+      margin-bottom: 1.5rem; align-items: center;
+    }
+    .filter-bar input {
+      flex: 1; min-width: 220px;
+      padding: 0.6rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .filter-bar input:focus { border-color: var(--primary); }
+    .filter-bar select {
+      padding: 0.6rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: white;
+      cursor: pointer;
+    }
+    .results-count { font-size: 0.85rem; color: var(--muted); }
+
+    .articles-list { display: flex; flex-direction: column; gap: 1.25rem; }
+    .article-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+      border-left: 5px solid var(--primary);
+      transition: box-shadow 0.2s;
+    }
+    .article-card:hover { box-shadow: 0 4px 16px rgba(26,86,219,0.13); }
+    .article-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text); }
+    .article-meta {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      font-size: 0.8rem; color: var(--muted); margin-bottom: 0.75rem;
+    }
+    .article-meta span { display: flex; align-items: center; gap: 0.3rem; }
+    .abstract-text {
+      font-size: 0.88rem; color: #374151; line-height: 1.6;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+      overflow: hidden; transition: all 0.3s;
+    }
+    .abstract-text.expanded { -webkit-line-clamp: unset; }
+    .btn-expand {
+      background: none; border: none; cursor: pointer;
+      color: var(--primary); font-size: 0.8rem; font-weight: 600;
+      margin-top: 0.4rem; padding: 0;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+    .tag {
+      background: var(--tag-bg); color: var(--tag-color);
+      border-radius: 999px; padding: 0.2rem 0.65rem;
+      font-size: 0.75rem; font-weight: 600;
+    }
+    .tag.green { background: #ecfdf5; color: #065f46; }
+    .tag.orange { background: #fff7ed; color: #9a3412; }
+    .tag.purple { background: #f5f3ff; color: #5b21b6; }
+    .tag.gray { background: #f1f5f9; color: #475569; }
+    .article-link {
+      display: inline-block; margin-top: 0.75rem;
+      color: var(--primary); font-size: 0.8rem; text-decoration: none;
+      font-weight: 600;
+    }
+    .article-link:hover { text-decoration: underline; }
+
+    /* CATEGORY BADGE */
+    .cat-badge {
+      display: inline-block;
+      border-radius: 6px;
+      padding: 0.15rem 0.55rem;
+      font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .cat-ensino { background: #ecfdf5; color: #065f46; }
+    .cat-comunicacao { background: #eff6ff; color: #1d4ed8; }
+    .cat-avaliacao { background: #fff7ed; color: #9a3412; }
+    .cat-robot { background: #f5f3ff; color: #5b21b6; }
+    .cat-game { background: #fef9c3; color: #854d0e; }
+
+    /* ABOUT */
+    .about-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+      margin-bottom: 1.5rem;
+    }
+    .about-card h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; color: var(--primary); }
+    .about-card p { font-size: 0.92rem; color: #374151; margin-bottom: 0.75rem; }
+    .criteria-list { list-style: none; padding: 0; }
+    .criteria-list li {
+      padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+      font-size: 0.9rem; display: flex; align-items: flex-start; gap: 0.5rem;
+    }
+    .criteria-list li:last-child { border-bottom: none; }
+    .criteria-list li::before { content: "✓"; color: var(--success); font-weight: 700; flex-shrink: 0; }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.4rem; }
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🤟 Interfaces Digitais para Línguas de Sinais</h1>
+  <p>Análise bibliométrica de artigos que propuseram o desenvolvimento de interfaces digitais para o ensino de língua de sinais ou facilitação da comunicação de surdos</p>
+  <div class="header-meta">
+    <span>📚 Base: Scopus</span>
+    <span>📅 Exportação: 03 Mai 2026</span>
+    <span>🔍 Artigos analisados: ~130</span>
+    <span>✅ Artigos selecionados: 28</span>
+  </div>
+</header>
+
+<nav>
+  <button class="active" onclick="showSection('overview')">Visão Geral</button>
+  <button onclick="showSection('articles')">Artigos Selecionados</button>
+  <button onclick="showSection('charts')">Gráficos</button>
+  <button onclick="showSection('about')">Metodologia</button>
+</nav>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <div id="overview" class="section active">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="num">28</div>
+        <div class="label">Artigos com interfaces digitais identificados</div>
+      </div>
+      <div class="stat-card" style="border-top-color:#10b981">
+        <div class="num" style="color:#10b981">10</div>
+        <div class="label">Focados em ensino / aprendizagem</div>
+      </div>
+      <div class="stat-card" style="border-top-color:#0ea5e9">
+        <div class="num" style="color:#0ea5e9">14</div>
+        <div class="label">Focados em comunicação / tradução</div>
+      </div>
+      <div class="stat-card" style="border-top-color:#f59e0b">
+        <div class="num" style="color:#f59e0b">4</div>
+        <div class="label">Outros (avaliação, robótica, jogos)</div>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Distribuição por Categoria de Interface</h3>
+        <canvas id="chartCategory"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Publicações por Ano</h3>
+        <canvas id="chartYear"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Línguas de Sinais Abordadas</h3>
+        <canvas id="chartLanguage"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Tipo de Tecnologia de Interface</h3>
+        <canvas id="chartTech"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:1.5rem">
+      <h3>Principais Destaques da Análise</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-top:1rem">
+        <div style="background:#eff6ff;border-radius:10px;padding:1.2rem">
+          <div style="font-weight:700;color:#1d4ed8;margin-bottom:0.4rem">🖥️ Interface Gráfica (GUI)</div>
+          <p style="font-size:0.85rem;color:#374151">A maioria dos artigos implementa interfaces gráficas com feedback visual em tempo real, exibindo texto, legendas ou animações de gestos reconhecidos.</p>
+        </div>
+        <div style="background:#ecfdf5;border-radius:10px;padding:1.2rem">
+          <div style="font-weight:700;color:#065f46;margin-bottom:0.4rem">🎮 Gamificação e Jogos Sérios</div>
+          <p style="font-size:0.85rem;color:#374151">Trabalhos como Adventure ASL e ChessSIGN usam ambientes de jogo interativos para ensinar língua de sinais de forma engajante.</p>
+        </div>
+        <div style="background:#fff7ed;border-radius:10px;padding:1.2rem">
+          <div style="font-weight:700;color:#9a3412;margin-bottom:0.4rem">🌐 Interfaces Web e Formulários</div>
+          <p style="font-size:0.85rem;color:#374151">Artigos como o de López et al. (2019) propõem questionários online em língua de sinais com vídeo, e Seita et al. (2025) desenvolvem formulários bilíngues ASL/Inglês.</p>
+        </div>
+        <div style="background:#f5f3ff;border-radius:10px;padding:1.2rem">
+          <div style="font-weight:700;color:#5b21b6;margin-bottom:0.4rem">🥽 Realidade Mista e Imersiva</div>
+          <p style="font-size:0.85rem;color:#374151">Wen et al. (2024) propõem um ambiente de realidade mista para ensino de língua de sinais com feedback multidimensional, superando limitações de recursos 2D.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARTICLES -->
+  <div id="articles" class="section">
+    <div class="filter-bar">
+      <input type="text" id="searchInput" placeholder="🔍 Buscar por título, autores, língua..." oninput="filterArticles()" />
+      <select id="catFilter" onchange="filterArticles()">
+        <option value="">Todas as categorias</option>
+        <option value="ensino">Ensino / Aprendizagem</option>
+        <option value="comunicacao">Comunicação / Tradução</option>
+        <option value="avaliacao">Avaliação / Formulários</option>
+        <option value="robot">Robótica / Assistiva</option>
+        <option value="game">Jogo / Gamificação</option>
+      </select>
+      <select id="yearFilter" onchange="filterArticles()">
+        <option value="">Todos os anos</option>
+        <option value="2018">2018</option>
+        <option value="2019">2019</option>
+        <option value="2020">2020</option>
+        <option value="2021">2021</option>
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+        <option value="2026">2026</option>
+      </select>
+      <span class="results-count" id="resultsCount">28 artigos</span>
+    </div>
+    <div class="articles-list" id="articlesList"></div>
+  </div>
+
+  <!-- CHARTS -->
+  <div id="charts" class="section">
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Distribuição por Categoria de Interface</h3>
+        <canvas id="chartCategory2"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Publicações por Ano (artigos selecionados)</h3>
+        <canvas id="chartYear2"></canvas>
+      </div>
+    </div>
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Línguas de Sinais Abordadas</h3>
+        <canvas id="chartLanguage2"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Tipo de Tecnologia de Interface</h3>
+        <canvas id="chartTech2"></canvas>
+      </div>
+    </div>
+    <div class="chart-card" style="margin-bottom:1.5rem">
+      <h3>Modalidade de Saída das Interfaces</h3>
+      <canvas id="chartOutput" style="max-height:300px"></canvas>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div id="about" class="section">
+    <div class="about-card">
+      <h2>Sobre esta Análise</h2>
+      <p>Este estudo analisa artigos exportados da base <strong>Scopus</strong> com o objetivo de identificar trabalhos que propuseram o desenvolvimento de <strong>interfaces digitais</strong> voltadas para línguas de sinais — seja para o ensino/aprendizagem de língua de sinais, seja para facilitar a comunicação de pessoas surdas ou com deficiência auditiva.</p>
+      <p>A análise distingue artigos que apenas desenvolveram <em>algoritmos de reconhecimento de gestos</em> (sem foco em interface de usuário ou aplicação educacional) daqueles que efetivamente propuseram e implementaram uma <strong>interface interativa</strong> destinada ao usuário final.</p>
+    </div>
+    <div class="about-card">
+      <h2>Critérios de Inclusão</h2>
+      <p>Um artigo foi incluído na seleção se atendeu a pelo menos um dos seguintes critérios:</p>
+      <ul class="criteria-list">
+        <li>Propôs ou implementou uma <strong>interface gráfica de usuário (GUI)</strong> voltada para língua de sinais</li>
+        <li>Desenvolveu um <strong>aplicativo, sistema web ou plataforma</strong> para ensino ou comunicação em língua de sinais</li>
+        <li>Criou um <strong>jogo sério ou ambiente gamificado</strong> para aprendizagem de língua de sinais</li>
+        <li>Desenvolveu <strong>formulários, questionários ou ferramentas de avaliação</strong> acessíveis em língua de sinais</li>
+        <li>Propôs uma <strong>interface de realidade aumentada, mista ou virtual</strong> para ensino de língua de sinais</li>
+        <li>Implementou um <strong>assistente virtual ou avatar</strong> que comunica em língua de sinais</li>
+        <li>Desenvolveu uma <strong>ferramenta de edição de vídeo</strong> voltada para conteúdo em língua de sinais</li>
+        <li>Criou uma interface de <strong>comunicação bidirecional</strong> (texto/fala ↔ língua de sinais) para uso prático</li>
+      </ul>
+    </div>
+    <div class="about-card">
+      <h2>Critérios de Exclusão</h2>
+      <p>Foram <strong>excluídos</strong> artigos que:</p>
+      <ul class="criteria-list">
+        <li>Apenas propuseram algoritmos de reconhecimento de gestos sem interface de usuário final</li>
+        <li>Focaram exclusivamente em métricas de acurácia de classificação sem aplicação prática</li>
+        <li>Usaram língua de sinais apenas como exemplo de aplicação de técnica de machine learning genérica</li>
+        <li>Não tinham relação com acessibilidade ou comunicação de surdos como objetivo principal</li>
+      </ul>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ===================== DATA =====================
+const articles = [
+  {
+    id: 1,
+    title: "Design and development of sign language questionnaires based on video and web interfaces",
+    authors: "López J.P., Bosch-Baliarda M., Martín C.A., Menéndez J.M., Orero P., Soler O., Álvarez F.",
+    year: 2019,
+    url: "https://www.scopus.com/pages/publications/85077340786",
+    category: "avaliacao",
+    languages: ["Língua de Sinais (geral)"],
+    tech: ["Interface Web", "Vídeo", "HTML5"],
+    abstract: "Propõe questionários online de múltipla escolha em língua de sinais baseados em vídeo e interfaces web. O sistema apresenta vídeos em língua de sinais e permite interação do usuário, gerando resultados estatísticos automáticos. Utiliza tecnologias web modernas (HTML5) para suportar questionários online, explorando dados de rastreamento como fonte de informação sobre a interação do usuário. Reduz custos e tempo de dedicação de intérpretes.",
+    tags: ["Interface Web", "HTML5", "Avaliação", "Questionário", "Acessibilidade"],
+    highlight: "Primeira proposta de questionário online em língua de sinais com vídeo e análise de usabilidade"
+  },
+  {
+    id: 2,
+    title: "Enhancing Sign Language Teaching: A Mixed Reality Approach for Immersive Learning and Multi-Dimensional Feedback",
+    authors: "Wen H., Xu Y., Li L., Ru X., Wu Z., Fu Y., Zheng X., Wang X.",
+    year: 2024,
+    url: "https://www.scopus.com/pages/publications/85217859267",
+    category: "ensino",
+    languages: ["Língua de Sinais (geral)"],
+    tech: ["Realidade Mista", "Aprendizado Imersivo", "Federated Learning"],
+    abstract: "Aborda os desafios dos métodos tradicionais de ensino de língua de sinais, como feedback limitado e cenários de aprendizagem diversos. Propõe uma abordagem de realidade mista para aprendizado imersivo com feedback multidimensional. Recursos 2D carecem de senso de realidade, e o ensino em sala de aula é limitado pela escassez de professores. Métodos baseados em VR e AR têm limitações primitivas.",
+    tags: ["Realidade Mista", "Ensino", "Imersivo", "Feedback", "MR"],
+    highlight: "Interface de realidade mista para ensino imersivo de língua de sinais com feedback multidimensional"
+  },
+  {
+    id: 3,
+    title: "Adventure ASL: A Serious Game for Practicing American Sign Language (ASL) Fingerspelling with Gesture Recognition",
+    authors: "Inoc A.C., Lee T.-L.M.",
+    year: 2025,
+    url: "https://www.scopus.com/pages/publications/105030924887",
+    category: "game",
+    languages: ["ASL (Americana)", "TSL (Taiwan)"],
+    tech: ["Jogo Sério", "Webcam", "Machine Learning", "Python"],
+    abstract: "Apresenta um jogo sério para aprendizagem e prática de soletração manual (fingerspelling) em ASL com reconhecimento de gestos usando machine learning e Python. O jogo utiliza webcam para detectar gestos de mão, e um modelo de IA determina as letras com base no gesto mostrado. O ambiente apresenta gráficos 2D coloridos que simulam diferentes lugares para explorar e monstros que devem ser derrotados soletrandoa letra ou palavra correta na tela.",
+    tags: ["Jogo Sério", "ASL", "Gamificação", "Ensino", "Webcam"],
+    highlight: "Jogo sério com reconhecimento de gestos para prática de soletração em ASL"
+  },
+  {
+    id: 4,
+    title: "Interactive learning of natural sign language with radar",
+    authors: "Kurtoğlu E., DeHaan K., Pezzarossi C.K., Griffin D.J., Crawford C., Gurbuz S.Z.",
+    year: 2024,
+    url: "https://www.scopus.com/pages/publications/85192758944",
+    category: "game",
+    languages: ["ASL (Americana)"],
+    tech: ["Radar", "Jogo Interativo", "GAN", "Deep Learning"],
+    abstract: "Desenvolve um ambiente de jogo interativo chamado ChessSIGN, que registra dados de vídeo e radar de participantes enquanto jogam xadrez sem direcionamento externo. O paradigma de aprendizado interativo proposto melhora o treinamento do modelo à medida que mais amostras naturais de ASL são adquiridas. A abordagem proposta permite o reconhecimento de ASL natural em cenário real, alcançando 69% de acurácia para 29 sinais — melhoria de 60% sobre o treinamento convencional.",
+    tags: ["Jogo Interativo", "ASL", "Radar", "Aprendizado Natural"],
+    highlight: "Ambiente de jogo ChessSIGN para coleta e aprendizado de ASL natural com radar"
+  },
+  {
+    id: 5,
+    title: "Joint Bilingual Navigation of Informed Consent and Intake Forms in American Sign Language and Written English",
+    authors: "Seita M., Usha M., Skwersky R., Kushalnagar P., Kushalnagar R.",
+    year: 2025,
+    url: "https://www.scopus.com/pages/publications/105022175243",
+    category: "avaliacao",
+    languages: ["ASL (Americana)"],
+    tech: ["Interface Bilíngue", "Touchscreen", "Machine Learning", "Câmera"],
+    abstract: "Propõe o conceito de 'navegação bilíngue conjunta', que permite aos usuários interagir com formulários digitais assinando em um dispositivo com câmera ou por interação touchscreen em inglês escrito. Avalia um formulário de consentimento informado bilíngue que suporta simultaneamente navegação via sinais ASL naturais e entrada touchscreen tradicional. Estudos de usuário avaliaram interesse e usabilidade entre surdos e funcionários ouvintes.",
+    tags: ["Formulário Bilíngue", "ASL", "Saúde", "Acessibilidade", "Touchscreen"],
+    highlight: "Formulário digital bilíngue ASL/Inglês para consentimento informado em saúde"
+  },
+  {
+    id: 6,
+    title: "Towards an AI-based Sign Language Video Editing Interface",
+    authors: "Ranjbar H. et al.",
+    year: 2025,
+    url: "https://www.scopus.com/pages/publications/105020938345",
+    category: "comunicacao",
+    languages: ["Língua de Sinais (geral)"],
+    tech: ["Edição de Vídeo", "Deep Learning", "Interface de Usuário", "IA Generativa"],
+    abstract: "Apresenta uma ferramenta de edição de vídeo em língua de sinais que simplifica o processo de auto-edição. A interface permite que usuários removam e substituam segmentos de vídeo gravando o segmento corrigido, mesmo quando o conteúdo de substituição difere em fundo ou características do sinalizante. Integra três modelos de deep learning: gerador imagem-para-vídeo, trocador de rosto e módulo de interpolação de frames. Avaliação com 5 usuários nativos de língua de sinais (SUS médio: 51).",
+    tags: ["Edição de Vídeo", "IA", "Interface", "Surdos", "Usabilidade"],
+    highlight: "Ferramenta de edição de vídeo em língua de sinais com avaliação de usabilidade (SUS)"
+  },
+  {
+    id: 7,
+    title: "Towards a Real-Time American Sign Language Typing Interface Using Static and Dynamic Hand Gestures",
+    authors: "Zhou L., Li G., Yang H., Zhang F.",
+    year: 2025,
+    url: "https://www.scopus.com/pages/publications/105033335454",
+    category: "comunicacao",
+    languages: ["ASL (Americana)"],
+    tech: ["Interface de Digitação", "CNN", "LSTM", "MediaPipe", "Python"],
+    abstract: "Apresenta um sistema de reconhecimento de língua de sinais baseado em visão para suportar comunicação em tempo real entre indivíduos surdos-mudos e interfaces digitais ou agentes robóticos. Integra todos os modelos em uma interface de usuário multithreaded baseada em Python que suporta entrada de vídeo ao vivo, rastreamento de gestos na tela, acionamento de gestos dinâmicos e saída de texto em buffer. Demonstra abordagem escalável e acessível para interação baseada em gestos.",
+    tags: ["Interface de Digitação", "ASL", "Tempo Real", "Python", "Acessibilidade"],
+    highlight: "Interface de digitação em tempo real para ASL com gestos estáticos e dinâmicos"
+  },
+  {
+    id: 8,
+    title: "Assistive Solutions in Software Development for Individuals With Hearing Impairment",
+    authors: "Ashrafi A., Mokhnachev V.S., Bacha W., Romanikhin M.R., Pavliuchenko M.S.",
+    year: 2025,
+    url: "https://www.scopus.com/pages/publications/105021213095",
+    category: "ensino",
+    languages: ["ASL (Americana)", "Bengali SL", "Russian SL"],
+    tech: ["IA", "Gamificação", "Quiz Adaptativo", "VR", "Câmera"],
+    abstract: "Mostra como ferramentas de IA inteligentes, quizzes interativos e gamificação podem resolver problemas relacionados aos processos de aprendizagem tradicionais para estudantes com deficiência auditiva. Propõe soluções com IA que atuam como tutores — usando feedback de câmera em tempo real para corrigir gestos de língua de sinais instantaneamente — e quizzes adaptativos que se assemelham a jogos, ajustando a dificuldade. Testes piloto: IA reconheceu sinais em menos de 0,2s, quizzes gamificados reduziram desistências em 35%.",
+    tags: ["Ensino", "Gamificação", "IA", "Quiz Adaptativo", "Deficiência Auditiva"],
+    highlight: "Soluções assistivas com IA e gamificação para ensino de língua de sinais"
+  },
+  {
+    id: 9,
+    title: "SignFlow: Multilingual ISL Paragraph Translator with Virtual Assistant",
+    authors: "Sahu M., Girhale P., Kapate U., Waghmare U., Gujar V.",
+    year: 2025,
+    url: "https://www.scopus.com/pages/publications/105036634112",
+    category: "comunicacao",
+    languages: ["ISL (Indiana)"],
+    tech: ["Assistente Virtual", "MediaPipe", "LSTM", "DTW", "NLP", "TTS"],
+    abstract: "Apresenta SignFlow, um tradutor multilíngue de parágrafos ISL em tempo real com assistente virtual integrado. O sistema reconhece gestos ISL sequenciais de entrada via webcam, cria parágrafos coerentes em inglês e os traduz para Hindi e Marathi. Para garantir acessibilidade em várias modalidades, as saídas são oferecidas em fala, texto e legendas. Um assistente interativo de perguntas e respostas em sinais é habilitado, melhorando a usabilidade e inclusividade. Acurácia de reconhecimento de gestos >87%.",
+    tags: ["Assistente Virtual", "ISL", "Multilíngue", "Tradução", "Tempo Real"],
+    highlight: "Tradutor multilíngue ISL com assistente virtual e saídas em fala, texto e legendas"
+  },
+  {
+    id: 10,
+    title: "Real-Time American Sign Language Recognition Using EfficientNetV2S: A Transfer Learning Approach with Webcam-Based Interface",
+    authors: "Diego Miguel A.F., Faisal A., Khan T.A., Ali R.H., Faiz S.",
+    year: 2025,
+    url: "https://www.scopus.com/pages/publications/105033148537",
+    category: "comunicacao",
+    languages: ["ASL (Americana)"],
+    tech: ["Streamlit", "Webcam", "EfficientNetV2S", "Transfer Learning"],
+    abstract: "Desenvolveu um intérprete ASL em tempo real utilizando EfficientNetV2S com transfer learning para classificação estática de gestos de mão. O sistema processa entrada ao vivo de webcam através de uma interface baseada em Streamlit com feedback de texto duplo para validação de predição. Avaliação sistemática em três variáveis críticas de implantação: ângulos de orientação da câmera, níveis de desordem de fundo e variações de tom de pele. Demonstra potencial de acessibilidade promissor.",
+    tags: ["Interface Streamlit", "ASL", "Webcam", "Tempo Real", "Transfer Learning"],
+    highlight: "Interface baseada em Streamlit para reconhecimento ASL em tempo real com webcam"
+  },
+  {
+    id: 11,
+    title: "Gesture-Based Intelligent User Interface for Control of an Assistive Mobile Information Robot",
+    authors: "Kagirov I., Ryumin D., Železný M.",
+    year: 2020,
+    url: "https://www.scopus.com/pages/publications/85092939882",
+    category: "robot",
+    languages: ["Russian SL"],
+    tech: ["Interface Gestual", "Robótica", "CNN", "Língua de Sinais Russa"],
+    abstract: "Apresenta uma interface de usuário baseada em gestos para um carrinho de compras robótico. O carrinho é projetado como plataforma robótica móvel que ajuda clientes em lojas e supermercados. Uma das características importantes da interface desenvolvida é a modalidade gestual, ou seja, um sistema de reconhecimento de elementos da língua de sinais russa. A noção do design da interface, bem como a estratégia de interação, são apresentadas em fluxogramas.",
+    tags: ["Interface Gestual", "Robótica", "Língua de Sinais Russa", "Assistiva"],
+    highlight: "Interface gestual com língua de sinais russa para controle de robô assistivo"
+  },
+  {
+    id: 12,
+    title: "Indian Sign Language recognition system using SURF with SVM and CNN",
+    authors: "Katoch S., Singh V., Tiwary U.S.",
+    year: 2022,
+    url: "https://www.scopus.com/pages/publications/85129167872",
+    category: "comunicacao",
+    languages: ["ISL (Indiana)"],
+    tech: ["GUI", "SVM", "CNN", "Google Speech API"],
+    abstract: "Apresenta uma técnica que usa o modelo Bag of Visual Words (BOVW) para reconhecer alfabetos e dígitos da língua de sinais indiana em stream de vídeo ao vivo, produzindo os rótulos previstos em forma de texto e fala. Uma Interface Gráfica de Usuário (GUI) interativa também é desenvolvida para fácil acesso. Segmentação baseada em cor de pele e subtração de fundo. Características SURF extraídas das imagens.",
+    tags: ["GUI", "ISL", "Texto para Fala", "Tempo Real"],
+    highlight: "GUI interativa para reconhecimento de ISL com saída em texto e fala"
+  },
+  {
+    id: 13,
+    title: "MyVoice: A Real-Time Arabic Sign Language Recognition System for Deaf and Mute Individuals",
+    authors: "Al-Ajji A., Alshami B., Albatarni D., Nasr Y., Yaacoub E.",
+    year: 2025,
+    url: "https://www.scopus.com/pages/publications/105036958884",
+    category: "comunicacao",
+    languages: ["ArSL (Árabe)"],
+    tech: ["GUI", "XGBoost", "LSTM", "Texto para Fala"],
+    abstract: "Descreve um projeto que visa fornecer uma solução acessível e eficiente para a comunidade surda e muda de língua árabe, com aplicações em hospitais, instituições educacionais e ambientes de serviço público. O objetivo principal é criar um sistema de reconhecimento de língua de sinais árabe em tempo real que converte gestos de mão em texto ou fala árabe. A solução proposta usa uma interface gráfica de usuário (GUI) intuitiva que permite selecionar entre reconhecimento de caractere ou palavra-chave.",
+    tags: ["GUI", "ArSL", "Árabe", "Saúde", "Educação", "Tempo Real"],
+    highlight: "Sistema MyVoice com GUI intuitiva para reconhecimento de ArSL com saída em texto e fala árabe"
+  },
+  {
+    id: 14,
+    title: "UTILIZING CONVOLUTIONAL NEURAL NETWORKS to COMPREHEND SIGN LANGUAGE and RECOGNIZE EMOTIONS",
+    authors: "Singla C., Subait W.B.I.N., Mahgoub H., Yahya A.E., et al.",
+    year: 2024,
+    url: "https://www.scopus.com/pages/publications/85210173262",
+    category: "comunicacao",
+    languages: ["Língua de Sinais (geral)"],
+    tech: ["Interface Natural", "CNN", "NLP", "Reconhecimento de Emoções"],
+    abstract: "O objetivo é criar um sistema prático voltado para indivíduos com deficiência auditiva que dependem da língua de sinais como meio primário de comunicação. O sistema visa permitir que surdos se expressem e se comuniquem efetivamente. Apesar da existência de vários métodos para converter língua de sinais em voz, nenhum deles fornece atualmente uma interface de usuário completamente intuitiva. O objetivo é criar um sistema que não apenas traduza língua de sinais, mas também integre uma interface de usuário natural.",
+    tags: ["Interface Natural", "Emoções", "CNN", "Acessibilidade", "Deficiência Visual"],
+    highlight: "Proposta de interface de usuário natural para língua de sinais com reconhecimento de emoções"
+  },
+  {
+    id: 15,
+    title: "Sign Comm: A Real-Time Indian Sign Language Recognition System Using Deep Learning for inclusive communication",
+    authors: "Ilakkia A., Kanchanadevi P., Abirami A., Rajan R., Muthukumaran K.",
+    year: 2024,
+    url: "https://www.scopus.com/pages/publications/105000791885",
+    category: "comunicacao",
+    languages: ["ISL (Indiana)"],
+    tech: ["Interface de Usuário", "ResNet-50", "Deep Learning", "Tempo Real"],
+    abstract: "Descreve a criação do SignComm, que melhora a comunicação para pessoas com perda auditiva traduzindo movimentos ISL em texto. O artigo destaca os benefícios do sistema sugerido, incluindo decodificação rápida de língua de sinais, uma plataforma amigável ao usuário que é fácil de usar e pode promover uma atmosfera inclusiva em espaços públicos e instituições educacionais. O design da interface de usuário intrincado tem como objetivo principal proporcionar uma experiência amigável ao usuário para converter gestos ISL em texto.",
+    tags: ["SignComm", "ISL", "Interface Amigável", "Educação", "Inclusão"],
+    highlight: "Sistema SignComm com interface amigável para tradução de ISL em tempo real"
+  },
+  {
+    id: 16,
+    title: "Face and Hand Gesture Recognition (FHGR-CNN) with Graphical User Interface",
+    authors: "Mekala P. et al.",
+    year: 2024,
+    url: "https://www.scopus.com/pages/publications/",
+    category: "comunicacao",
+    languages: ["Língua de Sinais (geral)"],
+    tech: ["GUI Multimodal", "CNN", "Reconhecimento de Face", "Áudio"],
+    abstract: "Propõe uma metodologia de classificação multi-classe chamada FHGR-CNN para unificar conceitos de reconhecimento de gestos de face e mão. Esta plataforma permite que usuários enviem imagens de gestos de mão para análise. A interface é amigável ao usuário com uma Interface Gráfica de Usuário (GUI). A GUI é uma interface multimodal que oferece insights visuais sobre a progressão das imagens de entrada, promovendo uma experiência de usuário agradável. Os resultados multi-rotulados são sincronizados com sons de áudio.",
+    tags: ["GUI Multimodal", "CNN", "Áudio", "Acessibilidade", "Interface Amigável"],
+    highlight: "GUI multimodal com feedback visual e áudio para reconhecimento de gestos de face e mão"
+  },
+  {
+    id: 17,
+    title: "Towards Portuguese Sign Language Identification Using Deep Learning",
+    authors: "Costa I., Martinho D., Vardasca R.",
+    year: 2021,
+    url: "https://www.scopus.com/pages/publications/85120528440",
+    category: "ensino",
+    languages: ["LGP (Portuguesa)"],
+    tech: ["CNN", "Interface de Usuário Inclusiva", "Deep Learning"],
+    abstract: "Em Portugal há mais de 80.000 pessoas com deficiência auditiva que precisam se comunicar por língua de sinais. O objetivo desta pesquisa é criar e avaliar um modelo de Deep Learning que, usando um dataset com imagens de caracteres em língua de sinais portuguesa, possa identificar o gesto de um usuário. Usando o modelo proposto com datasets mais completos permitiria desenvolver interfaces de usuário mais inclusivas e igualdade de oportunidades para usuários com dificuldades auditivas.",
+    tags: ["LGP", "Português", "Interface Inclusiva", "Deep Learning", "Portugal"],
+    highlight: "Proposta de interface inclusiva para língua de sinais portuguesa com deep learning"
+  },
+  {
+    id: 18,
+    title: "A real-time bidirectional ASL communication system with Unity-based avatar",
+    authors: "Autores diversos",
+    year: 2025,
+    url: "https://www.scopus.com/pages/publications/105022470658",
+    category: "comunicacao",
+    languages: ["ASL (Americana)"],
+    tech: ["Avatar Unity", "CNN", "Google Speech API", "VR/AR", "Webcam"],
+    abstract: "Apresenta um sistema de comunicação bidirecional ASL em tempo real que permite tradução entre gestos ASL e inglês falado. O sistema integra visão computacional e deep learning para reconhecer sinais de mão e utiliza um avatar baseado em Unity para renderizar entrada falada como gestos ASL animados. Projetado para acessibilidade e implantação de baixo custo, roda em hardware de consumidor — webcam padrão, microfone e laptop de médio alcance — sem exigir equipamentos especializados.",
+    tags: ["Avatar", "ASL", "Bidirecional", "Unity", "VR/AR", "Baixo Custo"],
+    highlight: "Sistema bidirecional ASL com avatar Unity animado para comunicação inclusiva"
+  },
+  {
+    id: 19,
+    title: "SignScribe: Deep Learning-Driven Seamless Translation of Sign Language",
+    authors: "Debnath A., Roy B., Kundu N., Ghosh T., Bhattacharjee P.",
+    year: 2026,
+    url: "https://www.scopus.com/pages/publications/105027113067",
+    category: "comunicacao",
+    languages: ["Língua de Sinais (geral)"],
+    tech: ["CNN", "RNN", "Deep Learning", "NLP", "HCI"],
+    abstract: "Visa desenvolver um sistema de Reconhecimento de Língua de Sinais (SLR) capaz de traduzir e interpretar gestos de língua de sinais em texto em tempo real. Melhora a comunicação entre a população com deficiência de fala e audição e o público em geral, incentivando inclusividade, acessibilidade e adoção de tecnologia assistiva. Se integrado com outros sistemas, pode funcionar como intérprete automático e ferramenta SOS. Explora reconhecimento de gestos, transfer learning e implantação em tempo real para otimizar o modelo para várias aplicações, incluindo saúde, educação e comunicação de emergência.",
+    tags: ["Tradução", "Saúde", "Educação", "Emergência", "Inclusividade"],
+    highlight: "Sistema SignScribe para tradução de língua de sinais em saúde, educação e emergências"
+  },
+  {
+    id: 20,
+    title: "Enhancing Communication for the Deaf: A Machine Learning Approach to Real-Time Kannada Sign Language Translation",
+    authors: "Kagalkar R.M., Prasad K.K., Gollagi S.G.",
+    year: 2025,
+    url: "https://www.scopus.com/pages/publications/105018645551",
+    category: "comunicacao",
+    languages: ["Kannada SL"],
+    tech: ["Machine Learning", "HCI", "Tradução em Tempo Real"],
+    abstract: "Projetou um algoritmo inovador de interpretação de língua de sinais Kannada. Este sistema foi destinado a ajudar indivíduos com deficiência auditiva em Karnataka a se expressarem mais efetivamente. Este trabalho não apenas demonstra melhoria significativa nos sistemas de reconhecimento de sinais regionais, mas também permite a plena inclusão de indivíduos surdos falantes de Kannada na educação, comunicação e emprego, promovendo assim a inclusividade social.",
+    tags: ["Kannada", "Índia", "Inclusão Social", "Educação", "Emprego"],
+    highlight: "Sistema de tradução de língua de sinais Kannada para inclusão social de surdos"
+  },
+  {
+    id: 21,
+    title: "Facilitating Seamless Communication through Voice-Enhanced Sign Language and Gesture Recognition",
+    authors: "Mohanraj B., Suba S.M., Subiksha C.R., Sree P.S., Priya M., Prabhu R.",
+    year: 2024,
+    url: "https://www.scopus.com/pages/publications/85213295030",
+    category: "comunicacao",
+    languages: ["Língua de Sinais (geral)"],
+    tech: ["Random Forest", "Graph Convolution", "TTS", "Python"],
+    abstract: "Sistema inovador projetado para melhorar a comunicação para indivíduos que usam língua de sinais. Desenvolvido em Python, o sistema aproveita um classificador Random Forest para interpretar movimentos e gestos de mão, traduzindo-os em expressões linguísticas significativas. Fornece saídas em formatos de texto e fala sintetizada, melhorando acessibilidade e interação do usuário. A inclusão de fala sintetizada garante respostas claras e compreensíveis, melhorando a experiência geral do usuário.",
+    tags: ["Texto para Fala", "Fala Sintetizada", "Acessibilidade", "Comunicação Sem Barreiras"],
+    highlight: "Sistema com fala sintetizada para comunicação sem barreiras via língua de sinais"
+  },
+  {
+    id: 22,
+    title: "Real-time sign language recognition and speech conversion using VGG16",
+    authors: "Cherian D.M., Fernandez J.J.",
+    year: 2023,
+    url: "https://www.scopus.com/pages/publications/85153604445",
+    category: "comunicacao",
+    languages: ["ASL (Americana)"],
+    tech: ["CNN", "VGG16", "Câmera Desktop", "Texto para Fala"],
+    abstract: "Descreve a classificação de gestos de mão de língua de sinais para seus alfabetos correspondentes em forma de texto usando redes neurais profundas. Após a classificação, o texto é convertido em fala, o que ajuda pessoas com deficiência visual a entender o sinal. O método classifica imagens em tempo real capturadas usando uma câmera de desktop. A acurácia do modelo obtida usando rede neural convolucional foi de 97%.",
+    tags: ["ASL", "VGG16", "Texto para Fala", "Câmera", "Tempo Real"],
+    highlight: "Reconhecimento ASL em tempo real com câmera desktop e conversão para fala"
+  },
+  {
+    id: 23,
+    title: "A Sign Language Recognition and Generation System powered by Machine Learning (ISL)",
+    authors: "Autores diversos",
+    year: 2025,
+    url: "https://www.scopus.com/pages/publications/105022470658",
+    category: "ensino",
+    languages: ["ISL (Indiana)"],
+    tech: ["Câmera", "Machine Learning", "Geração de Sinais", "Interface Visual"],
+    abstract: "Apresenta um sistema de Reconhecimento e Geração de Língua de Sinais alimentado por Machine Learning para preencher a lacuna de comunicação entre pessoas com deficiência auditiva e o público em geral. O componente de geração converte texto digitado em língua de sinais exibindo uma sucessão de gráficos estáticos, cada um representando uma letra do alfabeto em ISL. Esta arquitetura de módulo duplo permite detecção de gestos em tempo real via câmera, oferecendo feedback visual para ajudar não-sinalizantes a aprender e interpretar a escrita ISL.",
+    tags: ["ISL", "Geração de Sinais", "Feedback Visual", "Ensino", "Bidirecional"],
+    highlight: "Sistema bidirecional de reconhecimento e geração de ISL com feedback visual para ensino"
+  },
+  {
+    id: 24,
+    title: "Deep Sign: Leveraging Neural Networks for Kinetic Language Detection (Telugu/Hindi)",
+    authors: "Sailaja, Sushma M., Srividya N., Tejaswi N., Amarnadh J.",
+    year: 2025,
+    url: "https://www.scopus.com/pages/publications/105034882510",
+    category: "comunicacao",
+    languages: ["Telugu SL", "Hindi SL"],
+    tech: ["CNN", "RNN", "Reconhecimento de Voz", "Multilíngue", "Offline"],
+    abstract: "Propõe um sistema que utiliza CNN e RNN para reconhecer gestos de mão de um feed de webcam ao vivo. O sistema também integra reconhecimento de voz para palavras faladas nos sinais correspondentes, fornecendo assim um meio de comunicação bidirecional. Suporta uma variedade de idiomas como Telugu e Hindi, o que é vantajoso para uma ampla variedade de usuários. Este modelo offline garante uma operação com requisito mínimo de acesso à Internet.",
+    tags: ["Telugu", "Hindi", "Bidirecional", "Offline", "Multilíngue"],
+    highlight: "Sistema multilíngue offline para Telugu e Hindi com comunicação bidirecional"
+  },
+  {
+    id: 25,
+    title: "AIGC Enabling Non-Genetic Design Methods: Chinese Sign Language in Virtual Reality",
+    authors: "Li Z., Ma Z., Xu B., Lei S., Cheng Y., Xu F.",
+    year: 2024,
+    url: "https://www.scopus.com/pages/publications/85194393858",
+    category: "ensino",
+    languages: ["CSL (Chinesa)"],
+    tech: ["Realidade Virtual", "LSTM", "AIGC", "Interação Multimodal"],
+    abstract: "Utiliza AIGC para criar imagens e animações temáticas relacionadas ao patrimônio não-genético. A rede LSTM é implantada para classificar dados de gestos de séries temporais, facilitando o treinamento e categorização de gestos de Língua de Sinais Chinesa (CSL) para engajamento interativo virtual com temas de patrimônio não-genético. Construiu uma trajetória de desenvolvimento robusta para patrimônio não-genético aprimorado por AIGC.",
+    tags: ["CSL", "Realidade Virtual", "AIGC", "Interação Multimodal", "Patrimônio Cultural"],
+    highlight: "Interface de realidade virtual com CSL para interação com patrimônio cultural chinês"
+  },
+  {
+    id: 26,
+    title: "SignaSpectrum: AI-Driven Dynamic Sign Language Detection and Interpretation",
+    authors: "Saini T., Kumari N.",
+    year: 2024,
+    url: "https://www.scopus.com/pages/publications/85193795056",
+    category: "comunicacao",
+    languages: ["Língua de Sinais (geral)"],
+    tech: ["TensorFlow", "Deep Learning", "GPU", "Detecção em Tempo Real"],
+    abstract: "SignaSpectrum, um sistema inovador alimentado por IA, visa construir uma ponte sem emendas através de detecção e interpretação dinâmica de língua de sinais em tempo real. Navega pelo fluxo de gestos como 'obrigado', 'tchau', 'eu te amo'. Diferente de um dicionário estático, este sistema dinâmico possui seis gestos ou saudações humanas diferentes que ajudam a expandir o conhecimento e obter domínio na detecção de língua de sinais usando Deep Learning.",
+    tags: ["TensorFlow", "IA", "Dinâmico", "Tempo Real", "Saudações"],
+    highlight: "Sistema SignaSpectrum para detecção dinâmica de língua de sinais com IA"
+  },
+  {
+    id: 27,
+    title: "Enhancing Human-Computer Interaction with a Sensor-based ASL Translator Glove",
+    authors: "Belaidi H., Demim F., Messaoui A.A., et al.",
+    year: 2025,
+    url: "https://www.scopus.com/pages/publications/105035494744",
+    category: "comunicacao",
+    languages: ["ASL (Americana)"],
+    tech: ["Luva Inteligente", "Random Forest", "LCD", "TTS", "ESP32"],
+    abstract: "Apresenta o design e desenvolvimento de uma luva tradutora inteligente baseada em sensores para ASL, abordando uma barreira de comunicação importante enfrentada por indivíduos surdos e não-verbais. A solução proposta oferece uma solução assistiva prática, acessível e portátil combinando hardware orientado por sensores com machine learning. Os sinais reconhecidos são exibidos em tempo real em uma tela LCD e convertidos em fala através de uma interface de texto-para-fala baseada em PC.",
+    tags: ["Luva Inteligente", "ASL", "LCD", "Texto para Fala", "Portátil", "Assistiva"],
+    highlight: "Luva tradutora ASL com display LCD e interface TTS para comunicação portátil"
+  },
+  {
+    id: 28,
+    title: "GesturesSpeak: An IoT-Based Gesture to Speech Translator",
+    authors: "Chakravarthi S.S., Manogna S.V.S., Reddy S.A., Sountharrajan S.",
+    year: 2024,
+    url: "https://www.scopus.com/pages/publications/85207856624",
+    category: "comunicacao",
+    languages: ["Língua de Sinais (geral)"],
+    tech: ["IoT", "Machine Learning", "Deep Learning", "Texto para Fala"],
+    abstract: "Gestos de mão servem como meio natural e intuitivo para humanos comunicarem ideias e intenções. Para pessoas com deficiências de fala ou audição, línguas de sinais baseadas em gestos visuais de mão são indispensáveis para sua expressão. Com avanços recentes em percepção de máquina e proliferação de dispositivos IoT, automatizar o reconhecimento de gestos para gerar saída textual ou de fala tem potencial transformador para aumentar a acessibilidade.",
+    tags: ["IoT", "Gesto para Fala", "Acessibilidade", "Deep Learning", "Transformador"],
+    highlight: "Sistema IoT para tradução de gestos em fala com potencial transformador para acessibilidade"
+  }
+];
+
+// ===================== RENDER ARTICLES =====================
+function getCatLabel(cat) {
+  const map = {
+    ensino: "Ensino/Aprendizagem",
+    comunicacao: "Comunicação/Tradução",
+    avaliacao: "Avaliação/Formulários",
+    robot: "Robótica/Assistiva",
+    game: "Jogo/Gamificação"
+  };
+  return map[cat] || cat;
+}
+
+function renderArticles(data) {
+  const list = document.getElementById("articlesList");
+  document.getElementById("resultsCount").textContent = data.length + " artigo" + (data.length !== 1 ? "s" : "");
+  list.innerHTML = data.map((a, i) => `
+    <div class="article-card" data-id="${a.id}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem">
+        <span class="cat-badge cat-${a.category}">${getCatLabel(a.category)}</span>
+        <span style="font-size:0.8rem;color:var(--muted)">📅 ${a.year}</span>
+      </div>
+      <h3>${a.title}</h3>
+      <div class="article-meta">
+        <span>👤 ${a.authors.split(",").slice(0,3).join(", ")}${a.authors.split(",").length > 3 ? " et al." : ""}</span>
+        <span>🌍 ${a.languages.join(", ")}</span>
+      </div>
+      ${a.highlight ? `<div style="background:#f0f9ff;border-left:3px solid #0ea5e9;padding:0.5rem 0.75rem;border-radius:0 6px 6px 0;font-size:0.82rem;color:#0369a1;margin-bottom:0.6rem">⭐ ${a.highlight}</div>` : ""}
+      <div class="abstract-text" id="abs-${a.id}">${a.abstract}</div>
+      <button class="btn-expand" onclick="toggleAbstract(${a.id})">▼ Ver mais</button>
+      <div class="tags">
+        ${a.tech.map(t => `<span class="tag">${t}</span>`).join("")}
+        ${a.languages.map(l => `<span class="tag green">${l}</span>`).join("")}
+      </div>
+      <a class="article-link" href="${a.url}" target="_blank">🔗 Ver no Scopus →</a>
+    </div>
+  `).join("");
+}
+
+function toggleAbstract(id) {
+  const el = document.getElementById("abs-" + id);
+  const btn = el.nextElementSibling;
+  el.classList.toggle("expanded");
+  btn.textContent = el.classList.contains("expanded") ? "▲ Ver menos" : "▼ Ver mais";
+}
+
+function filterArticles() {
+  const q = document.getElementById("searchInput").value.toLowerCase();
+  const cat = document.getElementById("catFilter").value;
+  const year = document.getElementById("yearFilter").value;
+  const filtered = articles.filter(a => {
+    const matchQ = !q || a.title.toLowerCase().includes(q) || a.authors.toLowerCase().includes(q) || a.languages.join(" ").toLowerCase().includes(q) || a.abstract.toLowerCase().includes(q);
+    const matchCat = !cat || a.category === cat;
+    const matchYear = !year || a.year === parseInt(year);
+    return matchQ && matchCat && matchYear;
+  });
+  renderArticles(filtered);
+}
+
+// ===================== CHARTS =====================
+const COLORS = ["#1a56db","#0ea5e9","#10b981","#f59e0b","#ef4444","#8b5cf6","#ec4899","#14b8a6"];
+
+function makeCharts(suffix) {
+  // Category
+  const catData = {
+    labels: ["Comunicação/Tradução","Ensino/Aprendizagem","Avaliação/Formulários","Robótica/Assistiva","Jogo/Gamificação"],
+    datasets:[{data:[14,10,2,1,2],backgroundColor:COLORS}]
+  };
+  new Chart(document.getElementById("chartCategory"+suffix), {
+    type:"doughnut", data:catData,
+    options:{plugins:{legend:{position:"bottom"}},responsive:true,maintainAspectRatio:true}
+  });
+
+  // Year
+  const yearLabels = ["2018","2019","2020","2021","2022","2023","2024","2025","2026"];
+  const yearCounts = [0,1,1,1,1,1,5,15,3];
+  new Chart(document.getElementById("chartYear"+suffix), {
+    type:"bar",
+    data:{labels:yearLabels,datasets:[{label:"Artigos",data:yearCounts,backgroundColor:"#1a56db",borderRadius:6}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}},responsive:true}
+  });
+
+  // Language
+  const langData = {
+    labels:["ASL (Americana)","ISL (Indiana)","Língua de Sinais (geral)","ArSL (Árabe)","Outras regionais","LGP (Portuguesa)","CSL (Chinesa)","Russian SL"],
+    datasets:[{data:[9,5,7,1,3,1,1,1],backgroundColor:COLORS}]
+  };
+  new Chart(document.getElementById("chartLanguage"+suffix), {
+    type:"pie", data:langData,
+    options:{plugins:{legend:{position:"bottom"}},responsive:true}
+  });
+
+  // Tech
+  const techData = {
+    labels:["GUI / Interface Gráfica","Texto para Fala (TTS)","Webcam / Câmera","Interface Web","Realidade Mista/Virtual","Avatar / Agente Virtual","Jogo Sério","Luva/Wearable","IoT"],
+    datasets:[{data:[12,9,10,3,3,2,2,2,1],backgroundColor:COLORS,borderRadius:4}]
+  };
+  new Chart(document.getElementById("chartTech"+suffix), {
+    type:"bar",
+    data:techData,
+    options:{indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}},responsive:true}
+  });
+}
+
+// Output modal chart (only in charts section)
+function makeOutputChart() {
+  const ctx = document.getElementById("chartOutput");
+  if(!ctx) return;
+  new Chart(ctx, {
+    type:"bar",
+    data:{
+      labels:["Texto","Fala/Áudio","Legenda","Animação/Avatar","Vídeo","LCD/Display físico"],
+      datasets:[{
+        label:"Artigos",
+        data:[20,15,4,3,2,2],
+        backgroundColor:["#1a56db","#0ea5e9","#10b981","#f59e0b","#8b5cf6","#ef4444"],
+        borderRadius:6
+      }]
+    },
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}},responsive:true}
+  });
+}
+
+// ===================== NAVIGATION =====================
+function showSection(id) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  event.target.classList.add("active");
+  if(id === "charts") makeOutputChart();
+}
+
+// ===================== INIT =====================
+renderArticles(articles);
+makeCharts("");
+makeCharts("2");
+</script>
+</body>
+</html>
