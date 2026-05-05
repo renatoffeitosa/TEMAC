@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interfaces Digitais para Línguas de Sinais — Dashboard Atualizado</title>
+  <title>Interfaces Digitais para Línguas de Sinais — Dashboard Consolidado</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
@@ -183,15 +183,12 @@
       border-radius: 6px; padding: 0.25rem 0.75rem;
       font-size: 0.75rem; font-weight: 700;
     }
-    .tag.green { background: #ecfdf5; color: #059669; }
-    .tag.orange { background: #fff7ed; color: #ea580c; }
     .tag.purple { background: #f5f3ff; color: #7c3aed; }
-    .article-link {
-      display: inline-block; margin-top: 1.25rem;
-      color: var(--primary); font-size: 0.85rem; text-decoration: none;
-      font-weight: 700; border-top: 1px solid var(--border); padding-top: 0.75rem;
-    }
-    .article-link:hover { color: var(--primary-dark); }
+    .tag.ai { background: #fef3c7; color: #b45309; font-weight: 800; }
+    .ia-badge { display: inline-block; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; border-radius: 6px; padding: 0.3rem 0.8rem; font-size: 0.75rem; font-weight: 800; margin-left: 0.5rem; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3); }
+    .source-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-right: 0.5rem; }
+    .src-scopus { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+    .src-wos { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
 
     /* CATEGORY BADGE */
     .cat-badge {
@@ -215,24 +212,6 @@
     .adh-muito-alta { background: #10b981; color: white; }
     .adh-alta { background: #3b82f6; color: white; }
 
-    /* ABOUT */
-    .about-card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 2.5rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-      margin-bottom: 2rem; border: 1px solid var(--border);
-    }
-    .about-card h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--primary); }
-    .about-card p { font-size: 1rem; color: #334155; margin-bottom: 1rem; }
-    .criteria-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
-    .criteria-list li {
-      padding: 1rem; background: #f8fafc; border-radius: 10px;
-      font-size: 0.95rem; display: flex; align-items: flex-start; gap: 0.75rem;
-      border: 1px solid var(--border);
-    }
-    .criteria-list li::before { content: "✓"; color: var(--success); font-weight: 900; font-size: 1.2rem; }
-
     /* RESPONSIVE */
     @media (max-width: 768px) {
       header h1 { font-size: 1.8rem; }
@@ -249,16 +228,18 @@
   <h1>🤟 Interfaces Digitais para Línguas de Sinais</h1>
   <p>Dashboard consolidado de artigos científicos focados no desenvolvimento de interfaces interativas para ensino, comunicação e acessibilidade de pessoas surdas.</p>
   <div class="header-meta">
-    <span>📚 Base: Scopus + Seleção Especial</span>
+    <span>📚 Base: Scopus + Web of Science</span>
     <span>📅 Atualizado: 04 Mai 2026</span>
-    <span>🔍 Artigos Analisados: ~160</span>
-    <span>✅ Selecionados: 48</span>
+    <span>🔍 Artigos Analisados: ~250</span>
+    <span>✅ Selecionados: 72</span>
   </div>
 </header>
 
 <nav>
   <button class="active" onclick="showSection('overview')">Visão Geral</button>
-  <button onclick="showSection('articles')">Artigos Selecionados</button>
+  <button onclick="showSection('articles')">Todos os Artigos</button>
+  <button onclick="showSection('scopus-only')">Apenas Scopus</button>
+  <button onclick="showSection('wos-only')">Apenas WoS</button>
   <button onclick="showSection('charts')">Análise de Dados</button>
   <button onclick="showSection('about')">Metodologia</button>
 </nav>
@@ -269,20 +250,20 @@
   <div id="overview" class="section active">
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="num">48</div>
-        <div class="label">Total de Artigos com Interfaces</div>
+        <div class="num">72</div>
+        <div class="label">Total de Artigos Selecionados</div>
       </div>
-      <div class="stat-card" style="border-bottom: 4px solid #10b981">
-        <div class="num" style="color:#10b981">18</div>
-        <div class="label">Ensino / Aprendizagem</div>
+      <div class="stat-card" style="border-bottom: 4px solid #0369a1">
+        <div class="num" style="color:#0369a1">48</div>
+        <div class="label">Base Scopus</div>
       </div>
-      <div class="stat-card" style="border-bottom: 4px solid #3b82f6">
-        <div class="num" style="color:#3b82f6">24</div>
-        <div class="label">Comunicação / Tradução</div>
+      <div class="stat-card" style="border-bottom: 4px solid #991b1b">
+        <div class="num" style="color:#991b1b">24</div>
+        <div class="label">Base Web of Science</div>
       </div>
       <div class="stat-card" style="border-bottom: 4px solid #f59e0b">
-        <div class="num" style="color:#f59e0b">6</div>
-        <div class="label">Outros (Jogos, Robótica, Avaliação)</div>
+        <div class="num" style="color:#f59e0b">70</div>
+        <div class="label">Utilizam IA / Deep Learning</div>
       </div>
     </div>
 
@@ -296,35 +277,13 @@
         <canvas id="chartYear"></canvas>
       </div>
     </div>
-
-    <div class="chart-card" style="margin-bottom:2.5rem">
-      <h3>Destaques Tecnológicos das Interfaces</h3>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:1rem">
-        <div style="background:#f0f9ff;border-radius:12px;padding:1.5rem;border:1px solid #bae6fd">
-          <div style="font-weight:800;color:#0369a1;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.5rem">🖥️ GUI & WebApps</div>
-          <p style="font-size:0.9rem;color:#334155">Interfaces gráficas modernas (Tkinter, Streamlit, React) dominam, oferecendo feedback visual imediato e tradução bidirecional.</p>
-        </div>
-        <div style="background:#f0fdf4;border-radius:12px;padding:1.5rem;border:1px solid #bbf7d0">
-          <div style="font-weight:800;color:#166534;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.5rem">🤖 Avatares 3D & VR</div>
-          <p style="font-size:0.9rem;color:#334155">Uso crescente de avatares fotorrealistas e ambientes imersivos (Unity, VR) para simular interações naturais em Libras, ASL e LIS.</p>
-        </div>
-        <div style="background:#fff7ed;border-radius:12px;padding:1.5rem;border:1px solid #fed7aa">
-          <div style="font-weight:800;color:#9a3412;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.5rem">📱 Mobile & Wearables</div>
-          <p style="font-size:0.9rem;color:#334155">Aplicativos Android/iOS e luvas inteligentes (IoT) levam a acessibilidade para o cotidiano, permitindo comunicação em qualquer lugar.</p>
-        </div>
-        <div style="background:#f5f3ff;border-radius:12px;padding:1.5rem;border:1px solid #ddd6fe">
-          <div style="font-weight:800;color:#5b21b6;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.5rem">🎮 Gamificação</div>
-          <p style="font-size:0.9rem;color:#334155">Jogos como "ASL Sea Battle" e "ChessSIGN" transformam a coleta de dados e o aprendizado em experiências engajantes.</p>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- ARTICLES -->
   <div id="articles" class="section">
     <div class="filter-bar">
-      <input type="text" id="searchInput" placeholder="🔍 Buscar por título, autores, língua ou tecnologia..." oninput="filterArticles()" />
-      <select id="catFilter" onchange="filterArticles()">
+      <input type="text" id="searchInput" placeholder="🔍 Buscar por título, autores, língua ou tecnologia..." onkeyup="filterArticles('articlesList', 'all')">
+      <select id="catFilter" onchange="filterArticles('articlesList', 'all')">
         <option value="">Todas as Categorias</option>
         <option value="ensino">Ensino / Aprendizagem</option>
         <option value="comunicacao">Comunicação / Tradução</option>
@@ -332,7 +291,7 @@
         <option value="robot">Robótica / Assistiva</option>
         <option value="game">Jogo / Gamificação</option>
       </select>
-      <select id="yearFilter" onchange="filterArticles()">
+      <select id="yearFilter" onchange="filterArticles('articlesList', 'all')">
         <option value="">Todos os Anos</option>
         <option value="2026">2026</option>
         <option value="2025">2025</option>
@@ -342,48 +301,61 @@
         <option value="2021">2021</option>
         <option value="2020">2020</option>
         <option value="2019">2019</option>
-        <option value="2018">2018</option>
       </select>
-      <span class="results-count" id="resultsCount">48 artigos</span>
+      <div class="results-count" id="resultsCount">0 artigos</div>
     </div>
     <div class="articles-list" id="articlesList"></div>
+  </div>
+
+  <!-- SCOPUS ONLY -->
+  <div id="scopus-only" class="section">
+    <h2 style="margin-bottom:1.5rem; color:var(--primary)">Artigos da Base Scopus</h2>
+    <div class="articles-list" id="scopusList"></div>
+  </div>
+
+  <!-- WOS ONLY -->
+  <div id="wos-only" class="section">
+    <h2 style="margin-bottom:1.5rem; color:var(--primary)">Artigos da Base Web of Science</h2>
+    <div class="articles-list" id="wosList"></div>
   </div>
 
   <!-- CHARTS -->
   <div id="charts" class="section">
     <div class="charts-grid">
       <div class="chart-card">
+        <h3>Uso de Inteligência Artificial</h3>
+        <canvas id="chartAI"></canvas>
+      </div>
+      <div class="chart-card">
         <h3>Línguas de Sinais Abordadas</h3>
         <canvas id="chartLanguage"></canvas>
       </div>
+    </div>
+    <div class="charts-grid">
       <div class="chart-card">
         <h3>Tecnologias de Interface</h3>
         <canvas id="chartTech"></canvas>
       </div>
-    </div>
-    <div class="chart-card">
-      <h3>Modalidades de Saída da Interface</h3>
-      <canvas id="chartOutput" style="max-height:350px"></canvas>
+      <div class="chart-card">
+        <h3>Modalidades de Saída da Interface</h3>
+        <canvas id="chartOutput"></canvas>
+      </div>
     </div>
   </div>
 
   <!-- ABOUT -->
   <div id="about" class="section">
     <div class="about-card">
-      <h2>Metodologia de Seleção</h2>
-      <p>Este dashboard foi construído através de uma análise sistemática de <strong>160 resumos</strong> da base Scopus, complementada por uma seleção dirigida de artigos com alta aderência ao tema de <strong>Interfaces de Usuário (HCI)</strong>.</p>
-      <p>O foco principal foi identificar trabalhos que não apenas propõem algoritmos de reconhecimento, mas que descrevem a <strong>experiência do usuário</strong>, o <strong>design da interface</strong> e a <strong>aplicação prática</strong> em contextos educacionais ou sociais.</p>
-    </div>
-    <div class="about-card">
-      <h2>Critérios de Inclusão (Dashboard Atualizado)</h2>
-      <ul class="criteria-list">
-        <li><strong>Interfaces Gráficas (GUI):</strong> Sistemas com janelas, botões e feedback visual direto.</li>
-        <li><strong>Aplicações Web/Mobile:</strong> Plataformas acessíveis via navegador ou smartphone.</li>
-        <li><strong>Sistemas Bidirecionais:</strong> Interfaces que traduzem de e para a língua de sinais.</li>
-        <li><strong>Gamificação:</strong> Uso de mecânicas de jogo para ensino ou coleta de dados.</li>
-        <li><strong>Tecnologias Imersivas:</strong> VR, AR e Realidade Mista com foco em interação.</li>
-        <li><strong>Avatares Digitais:</strong> Representação visual de sinais através de agentes virtuais.</li>
-      </ul>
+      <h2>Metodologia da Pesquisa</h2>
+      <p>Este estudo realizou uma análise sistemática de artigos científicos para identificar propostas de <strong>interfaces digitais</strong> voltadas para línguas de sinais. O foco não foi apenas o reconhecimento de gestos, mas a aplicação prática em interfaces de usuário (HCI).</p>
+      <div class="criteria-list">
+        <div><strong>Critérios de Inclusão:</strong></div>
+        <ul>
+          <li>Desenvolvimento de protótipos de interface (GUI, Web, Mobile).</li>
+          <li>Foco em Ensino de Língua de Sinais ou Facilitação da Comunicação.</li>
+          <li>Uso de tecnologias assistivas e feedback ao usuário.</li>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -392,170 +364,308 @@
 <script>
 // ===================== DATA =====================
 const articles = [
-  // --- NOVOS ARTIGOS (PDF) ---
+  {
+    id: 301, title: "3D Avatar Approach for Continuous Sign Movement Using Speech/Text",
+    authors: "Autores WoS", year: 2021, category: "comunicacao", languages: ["ISL (Indiana)"], tech: ["Avatar 3D", "Speech-to-Sign", "Text-to-Sign"],
+    abstract: "Sistema com avatar 3D para conversão de fala/texto para movimentos contínuos em Língua de Sinais Indiana (ISL). Foca na naturalidade do movimento do avatar para facilitar a comunicação.",
+    tags: ["Avatar 3D", "ISL", "Tradu\u00e7\u00e3o"], adherence: "Alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 302, title: "Development of a Technology-Assisted Assessment for Sign Language Learning",
+    authors: "Autores WoS", year: 2022, category: "ensino", languages: ["DSGS (Su\u00ed\u00e7a)"], tech: ["Assessment System", "Feedback Autom\u00e1tico"],
+    abstract: "Sistema de avaliação assistida por tecnologia que fornece feedback automático para aprendizes de Língua de Sinais Suíço-Alemã (DSGS), focando na precisão dos sinais produzidos.",
+    tags: ["Avalia\u00e7\u00e3o", "DSGS", "Feedback"], adherence: "Muito alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 303, title: "Design and Development of Sign Language Learning Application for Special Needs Students Based on Android Using Flutter",
+    authors: "Autores WoS", year: 2023, category: "ensino", languages: ["L\u00edngua de Sinais (geral)"], tech: ["Android", "Flutter", "Mobile App"],
+    abstract: "Aplicativo Android desenvolvido com Flutter para o ensino e aprendizagem de Língua de Sinais, especificamente projetado para estudantes com necessidades especiais.",
+    tags: ["Android", "Flutter", "Educa\u00e7\u00e3o Especial"], adherence: "Muito alta", hasAI: false, source: "wos"
+  },
+  {
+    id: 304, title: "Design of Sign Language Learning Media Based on Virtual Reality",
+    authors: "Autores WoS", year: 2023, category: "ensino", languages: ["L\u00edngua de Sinais (geral)"], tech: ["Virtual Reality", "Ambiente Interativo"],
+    abstract: "Mídia de aprendizagem baseada em Realidade Virtual (VR) que oferece um ambiente interativo para o ensino de Língua de Sinais, permitindo prática imersiva.",
+    tags: ["VR", "Imersivo", "Educa\u00e7\u00e3o"], adherence: "Muito alta", hasAI: false, source: "wos"
+  },
+  {
+    id: 305, title: "A Novel Machine Learning Based Two-Way Communication System for Deaf and Mute",
+    authors: "Autores WoS", year: 2023, category: "comunicacao", languages: ["L\u00edngua de Sinais (geral)"], tech: ["Machine Learning", "Bidirecional"],
+    abstract: "Sistema de comunicação bidirecional baseado em Machine Learning que facilita a interação entre pessoas surdas/mudas e ouvintes através de tradução em tempo real.",
+    tags: ["Bidirecional", "ML", "Comunica\u00e7\u00e3o"], adherence: "Alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 306, title: "Sign language in immersive virtual reality: design, development, and evaluation of a virtual reality learning environment prototype",
+    authors: "Autores WoS", year: 2024, category: "ensino", languages: ["L\u00edngua de Sinais (geral)"], tech: ["VR Learning Environment", "Imersivo"],
+    abstract: "Protótipo de ambiente de aprendizagem em realidade virtual imersiva para o ensino de Língua de Sinais, incluindo design, desenvolvimento e avaliação com usuários.",
+    tags: ["VR", "HCI", "Avalia\u00e7\u00e3o"], adherence: "Muito alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 307, title: "SIGN LANGUAGE LETTER LEARNING MEDIA",
+    authors: "Autores WoS", year: 2024, category: "ensino", languages: ["BISINDO (Indon\u00e9sia)"], tech: ["C\u00e2mera", "Feedback por Voz", "M\u00eddia Digital"],
+    abstract: "Mídia digital de aprendizagem que utiliza câmera e feedback por voz para o ensino, prática e teste de letras em Língua de Sinais Indonésia (BISINDO).",
+    tags: ["BISINDO", "Feedback Voz", "Alfabeto"], adherence: "Alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 308, title: "Enhancing word signing in hearing students with reading disorders using computer-based learning trials",
+    authors: "Autores WoS", year: 2024, category: "ensino", languages: ["L\u00edngua de Sinais (geral)"], tech: ["V\u00eddeo-modelo", "Interven\u00e7\u00e3o Computacional"],
+    abstract: "Uso de ensaios de aprendizagem baseados em computador com vídeos-modelo para ensinar sinais a estudantes ouvintes com transtornos de leitura, melhorando a memorização.",
+    tags: ["V\u00eddeo-modelo", "Leitura", "Inclus\u00e3o"], adherence: "Alta", hasAI: false, source: "wos"
+  },
+  {
+    id: 309, title: "Interactive system based on artificial intelligence and robotic arm to enhance Arabic sign language learning in deaf children",
+    authors: "Autores WoS", year: 2024, category: "ensino", languages: ["ArSL (\u00c1rabe)"], tech: ["IA", "Bra\u00e7o Rob\u00f3tico", "Interativo"],
+    abstract: "Sistema interativo que combina IA e um braço robótico para ensinar letras da Língua de Sinais Árabe (ArSL) para crianças surdas de forma lúdica e física.",
+    tags: ["Rob\u00f3tica", "ArSL", "Crian\u00e7as"], adherence: "Muito alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 310, title: "A machine learning-driven web application for sign language learning",
+    authors: "Autores WoS", year: 2024, category: "ensino", languages: ["L\u00edngua de Sinais (geral)"], tech: ["Web Application", "Machine Learning"],
+    abstract: "Aplicação web baseada em Machine Learning para aprendizagem de Língua de Sinais, focando na soletração e no reconhecimento automático dos sinais do usuário.",
+    tags: ["Web", "ML", "Soletra\u00e7\u00e3o"], adherence: "Alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 311, title: "Virtual Trainer for Learning Mexican Sign Language Using Video Similarity Analysis",
+    authors: "Autores WoS", year: 2025, category: "ensino", languages: ["MSL (Mexicana)"], tech: ["C\u00e2mera RGB", "Feedback em Tempo Real", "Plataforma Virtual"],
+    abstract: "Plataforma de treinamento virtual que utiliza análise de similaridade de vídeo via câmera RGB para ensinar Língua de Sinais Mexicana (MSL) com feedback instantâneo.",
+    tags: ["MSL", "Feedback", "Treinador Virtual"], adherence: "Muito alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 312, title: "A Vision-Based System for Automated Sign Language Teaching",
+    authors: "Autores WoS", year: 2026, category: "ensino", languages: ["L\u00edngua de Sinais (geral)"], tech: ["Webcam", "Vis\u00e3o Computacional", "Feedback Detalhado"],
+    abstract: "Sistema computacional que utiliza webcam e visão computacional para o ensino automatizado, fornecendo feedback detalhado sobre forma, posição e movimento das mãos.",
+    tags: ["Vis\u00e3o Computacional", "Feedback", "Automatizado"], adherence: "Muito alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 313, title: "Mobile Auslan: A multimodal dialogue-centered sign language learning system",
+    authors: "Autores WoS", year: 2026, category: "ensino", languages: ["Auslan (Australiana)"], tech: ["Mobile App", "Multimodal", "Dialogue-centered"],
+    abstract: "Sistema móvel multimodal focado em diálogos para a aprendizagem da Língua de Sinais Australiana (Auslan), promovendo conversação prática.",
+    tags: ["Auslan", "Mobile", "Di\u00e1logo"], adherence: "Muito alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 314, title: "Behavioral Engagement in VR-Based Sign Language Learning: Visual Attention as a Predictor of Performance and Temporal Dynamics",
+    authors: "Autores WoS", year: 2026, category: "ensino", languages: ["L\u00edngua de Sinais (geral)"], tech: ["VR (SONAR)", "Visual Attention", "Performance Tracking"],
+    abstract: "Aplicação de VR chamada SONAR para treinamento e validação de aprendizagem em Língua de Sinais, analisando a atenção visual como preditor de performance.",
+    tags: ["VR", "Aten\u00e7\u00e3o Visual", "SONAR"], adherence: "Alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 315, title: "Guidelines for Developing Sign Language Learning Tools Targeted at Deaf Children",
+    authors: "Autores WoS", year: 2026, category: "ensino", languages: ["L\u00edngua de Sinais (geral)"], tech: ["Guidelines", "HCI Design"],
+    abstract: "Diretrizes de desenvolvimento para ferramentas de aprendizagem de Língua de Sinais voltadas para crianças surdas, focando em critérios de design de interface e usabilidade.",
+    tags: ["Diretrizes", "Design", "Crian\u00e7as"], adherence: "Alta", hasAI: false, source: "wos"
+  },
+// --- WEB OF SCIENCE ARTICLES ---
+  {
+    id: 201, title: "Automatic assessment of Swiss German Sign Language vocabulary production",
+    authors: "University of Zurich", year: 2022, category: "ensino", languages: ["DSGS (Suíça)"], tech: ["Assessment System", "SLR", "Feedback"],
+    abstract: "Sistema de avaliação para sinais lexicais da Língua de Sinais Suíça-Alemã (DSGS) baseado em reconhecimento automático. Fornece feedback a aprendizes L2 sobre parâmetros manuais (forma, posição, localização e movimento).",
+    tags: ["Avaliação", "DSGS", "L2 Learning", "SLR"], adherence: "Muito alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 202, title: "The Performance of Thai Sign Language Recognition with 2D Convolutional Neural Network Based on NVIDIA Jetson Nano",
+    authors: "Gedkhaw, E.", year: 2022, category: "comunicacao", languages: ["TSL (Tailandesa)"], tech: ["Jetson Nano", "2DCNN", "Real-time"],
+    abstract: "Inovação em tradução automática de TSL usando CNN 2D em hardware embarcado (Jetson Nano). Foca na performance de extração de características para evitar falhas de sistema em processamento complexo em tempo real.",
+    tags: ["TSL", "CNN", "Jetson Nano", "Embarcado"], adherence: "Alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 203, title: "An Intelligent Android System for Automatic Sign Language Recognition and Learning",
+    authors: "Shaban, S.A. et al.", year: 2024, category: "ensino", languages: ["ArSL (Árabe)", "ASL"], tech: ["Android", "Smart Glove", "AR"],
+    abstract: "Sistema Android inteligente com dois subsistemas: uma luva sensorial IoT (SSG-Sys) para reconhecimento e um app de Realidade Aumentada (MASLL-Sys) para ensino, tornando o aprendizado mais realista.",
+    tags: ["Android", "IoT", "AR", "Glove"], adherence: "Muito alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 204, title: "SINSEÑAS: Mobile application for learning and translation of colombian sign language",
+    authors: "Mosquera, C.F.B. et al.", year: 2024, category: "comunicacao", languages: ["LSC (Colombiana)"], tech: ["Mobile App", "Tradução", "Inclusão"],
+    abstract: "Desenvolvimento de uma alternativa tecnológica para interpretação e aprendizagem da Língua de Sinais Colombiana em dispositivos móveis, visando reduzir a lacuna de comunicação.",
+    tags: ["Mobile", "LSC", "Colômbia", "Tradução"], adherence: "Alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 205, title: "SignEvaluator: A Gesture and Sentence Characteristic-Based Sign Language Quality Assessment System",
+    authors: "Zheng, Z. et al.", year: 2025, category: "ensino", languages: ["Língua de Sinais (geral)"], tech: ["Quality Assessment", "Feature Extractor", "LSTM"],
+    abstract: "Sistema SignEvaluator para avaliar a qualidade de gestos e sentenças em língua de sinais. Utiliza extratores de características de movimento e fluência para melhorar a eficiência do aprendizado.",
+    tags: ["Avaliação", "Qualidade", "HCI", "LSTM"], adherence: "Muito alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 206, title: "Design and Implementation of a 3D Korean Sign Language Learning System Using Pseudo-Hologram",
+    authors: "Kim, N. et al.", year: 2025, category: "ensino", languages: ["KSL (Coreana)"], tech: ["Pseudo-Hologram", "Leap Motion", "RNN"],
+    abstract: "Sistema de aprendizagem 3D que utiliza tecnologia de pseudo-holograma e sensores Leap Motion. Oferece uma experiência imersiva para capturar as características espaciais da língua de sinais.",
+    tags: ["Holograma", "3D", "KSL", "Imersivo"], adherence: "Muito alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 207, title: "A sign language recognition system based on wearable devices and artificial intelligence",
+    authors: "Autores WoS", year: 2024, category: "comunicacao", languages: ["Língua de Sinais (geral)"], tech: ["Wearables", "Deep Learning", "HCI"],
+    abstract: "Sistema de reconhecimento baseado em dispositivos vestíveis que traduz sinais para texto em tempo real, focado na portabilidade e usabilidade em contextos sociais.",
+    tags: ["Wearables", "Deep Learning", "Portabilidade"], adherence: "Alta", hasAI: true, source: "wos"
+  },
+  {
+    id: 208, title: "Inclusive Education: A Web-based Interface for Sign Language Learning",
+    authors: "Autores WoS", year: 2023, category: "ensino", languages: ["Língua de Sinais (geral)"], tech: ["Web Interface", "Video-based", "Interactive"],
+    abstract: "Interface web projetada para educação inclusiva, permitindo que alunos surdos e ouvintes aprendam sinais através de módulos interativos e feedback visual.",
+    tags: ["Web", "Educação Inclusiva", "Interativo"], adherence: "Alta", hasAI: true, source: "wos"
+  },
+
+  // --- SCOPUS ARTICLES ---
   {
     id: 101, title: "InSegno: AI-Enhanced Platform for Inclusive and Accessible Learning with Sign Language",
     authors: "Autores diversos", year: 2025, category: "ensino", languages: ["LIS (Italiana)"], tech: ["Plataforma Web", "IA", "Educação"],
     abstract: "Explora o desenvolvimento da InSegno, uma plataforma web projetada para fornecer conteúdo educacional em Língua Italiana de Sinais (LIS). Foca na experiência do usuário e em soluções de automação baseadas em IA para acelerar a implantação de novos conteúdos inclusivos.",
-    tags: ["Web", "LIS", "Inclusão", "IA"], adherence: "Muito alta"
+    tags: ["Web", "LIS", "Inclusão", "IA"], adherence: "Muito alta", hasAI: true, source: "scopus"
   },
   {
     id: 102, title: "Insights from Immersive Learning: Using Sentiment Analysis and Real-time Narration to Refine ASL Instruction in Virtual Reality",
     authors: "Autores diversos", year: 2024, category: "game", languages: ["ASL (Americana)"], tech: ["Realidade Virtual", "Sentiment Analysis", "Unity"],
     abstract: "Desenvolveu o 'ASL Champ!', um jogo de aprendizagem de ASL em VR imersiva. Utiliza análise de sentimento e narração em tempo real para refinar a instrução e avaliar a intuitividade da interface e do reconhecimento de sinais.",
-    tags: ["VR", "ASL", "Gamificação", "UX"], adherence: "Muito alta"
+    tags: ["VR", "ASL", "Gamificação", "UX"], adherence: "Muito alta", hasAI: true, source: "scopus"
   },
   {
     id: 103, title: "Adaptive Assistive Technologies for Learning Mexican Sign Language: Design of a Mobile Application",
     authors: "Autores diversos", year: 2026, category: "ensino", languages: ["MSL (Mexicana)"], tech: ["App Mobile", "Pose Estimation", "Feedback em Tempo Real"],
     abstract: "Aplicativo móvel projetado como tecnologia assistiva adaptativa para aprender MSL. Usa CNNs e modelos de estimativa de pose para reconhecer gestos em tempo real com 95,7% de acurácia e fornecer feedback instantâneo.",
-    tags: ["Mobile", "MSL", "Educação", "Feedback"], adherence: "Muito alta"
+    tags: ["Mobile", "MSL", "Educação", "Feedback"], adherence: "Muito alta", hasAI: true, source: "scopus"
   },
   {
     id: 104, title: "Game Interface for Inclusive Teaching Through Educational Robotics",
     authors: "Lima J.M. et al.", year: 2025, category: "game", languages: ["Libras (Brasileira)"], tech: ["YOLO", "Robótica Educacional", "Interface de Jogo"],
     abstract: "Sistema que usa visão computacional (YOLO) para interpretar gestos em Libras em um jogo interativo. A interface permite controlar movimentos de desenho de formas geométricas através de sinais, integrando robótica e inclusão.",
-    tags: ["Libras", "Robótica", "YOLO", "Brasil"], adherence: "Muito alta"
+    tags: ["Libras", "Robótica", "YOLO", "Brasil"], adherence: "Muito alta", hasAI: true, source: "scopus"
   },
   {
     id: 105, title: "Towards an AI-Driven Video-Based American Sign Language Dictionary",
     authors: "Autores diversos", year: 2025, category: "ensino", languages: ["ASL (Americana)"], tech: ["Dicionário Visual", "HCI", "Busca por Vídeo"],
     abstract: "Dicionário baseado em vídeo que permite aos usuários enviar um vídeo de um sinal e receber os resultados correspondentes. Aborda desafios de HCI como gravação, latência e privacidade em interfaces de busca gestual.",
-    tags: ["Dicionário", "ASL", "HCI", "Busca"], adherence: "Muito alta"
+    tags: ["Dicionário", "ASL", "HCI", "Busca"], adherence: "Muito alta", hasAI: true, source: "scopus"
   },
   {
     id: 106, title: "Using HCI and AI in Education to Improve the Literacy of Deaf Children",
     authors: "Autores diversos", year: 2024, category: "ensino", languages: ["Língua de Sinais (geral)"], tech: ["AR (Realidade Aumentada)", "Livro Infantil Digital"],
     abstract: "Design de um livro ilustrado digital com AR para ajudar crianças surdas na alfabetização bilíngue (sinais e escrita). A interface promove a inclusão social através de interações contínuas entre usuários de sinais e não-usuários.",
-    tags: ["AR", "Alfabetização", "Infantil", "HCI"], adherence: "Alta"
+    tags: ["AR", "Alfabetização", "Infantil", "HCI"], adherence: "Alta", hasAI: true, source: "scopus"
   },
   {
     id: 107, title: "Sinhala Sign Language Translation through Immersive 3D Avatars and Adaptive Learning",
     authors: "Gamage B.G.J. et al.", year: 2023, category: "comunicacao", languages: ["SSL (Sinhala)"], tech: ["Avatar 3D", "Deep Learning", "Interface Adaptativa"],
     abstract: "Sistema abrangente para tradução de SSL usando avatares 3D imersivos. Inclui reconhecimento de emoções, interfaces de aprendizagem personalizadas e currículo adaptativo para a comunidade surda do Sri Lanka.",
-    tags: ["Avatar 3D", "SSL", "Emoções", "Sri Lanka"], adherence: "Alta"
+    tags: ["Avatar 3D", "SSL", "Emoções", "Sri Lanka"], adherence: "Alta", hasAI: true, source: "scopus"
   },
   {
     id: 108, title: "HCI Challenges in the Development of Captar-Libras: Health Context",
     authors: "Autores diversos", year: 2026, category: "comunicacao", languages: ["Libras (Brasileira)"], tech: ["Avatar Fotorrealista", "Interface Bidirecional", "Saúde"],
     abstract: "Tradutor bidirecional Libras-Português focado no atendimento pré-médico. Utiliza um avatar fotorrealista com expressões faciais e aborda desafios específicos de HCI no contexto hospitalar para pacientes surdos.",
-    tags: ["Saúde", "Libras", "Avatar", "Brasil"], adherence: "Muito alta"
+    tags: ["Saúde", "Libras", "Avatar", "Brasil"], adherence: "Muito alta", hasAI: true, source: "scopus"
   },
   {
     id: 109, title: "Bridging Communication Gaps with Bidirectional Italian Sign Language Translation (DEEP)",
     authors: "Autores diversos", year: 2025, category: "comunicacao", languages: ["LIS (Italiana)"], tech: ["Whisper", "Chat Interface", "Avatar Humano"],
     abstract: "Sistema DEEP para farmácias e registros municipais. Oferece interface de chat onde surdos sinalizam para a câmera e ouvintes digitam texto, com tradução bidirecional automática e avatar humano realista.",
-    tags: ["Chat", "LIS", "Serviço Público", "Bidirecional"], adherence: "Muito alta"
+    tags: ["Chat", "LIS", "Serviço Público", "Bidirecional"], adherence: "Muito alta", hasAI: true, source: "scopus"
   },
   {
     id: 110, title: "Translator WebApp with Avatar Indian Sign Language Gesture Recognition",
     authors: "Autores diversos", year: 2025, category: "comunicacao", languages: ["ISL (Indiana)"], tech: ["WebApp", "Avatar 2D", "VGG19"],
     abstract: "Aplicação web inclusiva que traduz gestos ISL capturados via webcam para texto/fala e converte entrada de voz/texto em sinais através de um avatar 2D. Focado no setor de saúde para evitar erros de comunicação.",
-    tags: ["WebApp", "ISL", "Avatar 2D", "Saúde"], adherence: "Muito alta"
+    tags: ["WebApp", "ISL", "Avatar 2D", "Saúde"], adherence: "Muito alta", hasAI: true, source: "scopus"
   },
   {
     id: 111, title: "Speech to Sign Language Translator Interface",
     authors: "Autores diversos", year: 2025, category: "comunicacao", languages: ["Língua de Sinais (geral)"], tech: ["GUI Python", "Asynchronous", "Transcrição"],
     abstract: "Interface gráfica (GUI) desenvolvida em Python para transcrever arquivos de áudio ou fala via microfone diretamente para língua de sinais, facilitando a compreensão de discursos longos por pessoas surdas.",
-    tags: ["GUI", "Python", "Transcrição", "Acessibilidade"], adherence: "Alta"
+    tags: ["GUI", "Python", "Transcrição", "Acessibilidade"], adherence: "Alta", hasAI: true, source: "scopus"
   },
   {
     id: 112, title: "Empowering Communication: A Word-to-GIF Approach for Sign Language Accessibility",
     authors: "Jane Valentina H. et al.", year: 2025, category: "comunicacao", languages: ["Língua de Sinais (geral)"], tech: ["Tkinter GUI", "GIF Animation", "Python"],
     abstract: "Aplicação 'Text to Sign Language' com interface Tkinter que traduz texto digitado em sequências de GIFs de sinais. Prioriza usabilidade com layout limpo e esquema de cores contrastantes para acessibilidade.",
-    tags: ["Tkinter", "GIF", "Acessibilidade", "Python"], adherence: "Alta"
+    tags: ["Tkinter", "GIF", "Acessibilidade", "Python"], adherence: "Alta", hasAI: true, source: "scopus"
   },
   {
     id: 113, title: "American Sign Language Recognition Application (ASLRS)",
     authors: "Autores diversos", year: 2025, category: "comunicacao", languages: ["ASL (Americana)"], tech: ["Web App", "Generative AI", "Webcam"],
     abstract: "Programa baseado na web que utiliza CNNs e IA Generativa para compreensão contextual. Permite entrada via webcam e traduz gestos, imagens ou vídeos em texto ou voz, visando inclusividade na comunicação.",
-    tags: ["Web", "ASL", "IA Generativa", "Contexto"], adherence: "Alta"
+    tags: ["Web", "ASL", "IA Generativa", "Contexto"], adherence: "Alta", hasAI: true, source: "scopus"
   },
   {
     id: 114, title: "AI-Enabled Real-Time Sign Language Translator",
     authors: "Autores diversos", year: 2020, category: "comunicacao", languages: ["ASL (Americana)"], tech: ["Android App", "CNN", "HCI"],
     abstract: "Aplicativo Android que interpreta ASL para Inglês em tempo real. Uma das poucas soluções mobile focadas em eliminar a dependência de computadores desktop para tradução espontânea de sinais.",
-    tags: ["Android", "ASL", "Mobile", "Tempo Real"], adherence: "Alta"
+    tags: ["Android", "ASL", "Mobile", "Tempo Real"], adherence: "Alta", hasAI: true, source: "scopus"
   },
   {
     id: 115, title: "Indian Sign Language Recognition System Using OpenCV and TensorFlow",
     authors: "Sharma G. et al.", year: 2025, category: "comunicacao", languages: ["ISL (Indiana)"], tech: ["OpenCV", "TensorFlow", "Smartphones/Wearables"],
     abstract: "Sistema projetado para ser amigável ao usuário, oferecendo tradução em tempo real em dispositivos móveis e wearables. Foca na redução de barreiras em interações cotidianas entre ouvintes e surdos.",
-    tags: ["ISL", "Mobile", "Wearables", "HCI"], adherence: "Alta"
+    tags: ["ISL", "Mobile", "Wearables", "HCI"], adherence: "Alta", hasAI: true, source: "scopus"
   },
   {
     id: 116, title: "Advancing HCI: ASL to Nepali Translation Application",
     authors: "Autores diversos", year: 2024, category: "comunicacao", languages: ["ASL (Americana)", "Nepali"], tech: ["Tkinter GUI", "gTTS", "OpenCV"],
     abstract: "Interface gráfica baseada em Tkinter que traduz sinais ASL para texto e fala em Nepali. Aborda a carência de tecnologias assistivas em Nepal para promover a inclusão da comunidade surda local.",
-    tags: ["Tkinter", "Nepali", "ASL", "Inclusão"], adherence: "Alta"
+    tags: ["Tkinter", "Nepali", "ASL", "Inclusão"], adherence: "Alta", hasAI: true, source: "scopus"
   },
   {
     id: 117, title: "HCISLS: Innovative Sign Language Recognition System",
     authors: "Autores diversos", year: 2025, category: "comunicacao", languages: ["TSL (Turca)"], tech: ["GUI Inovadora", "Deep Learning", "TSLAnet"],
     abstract: "Apresenta o HCISLS com uma interface gráfica (GUI) sem precedentes para coleta de dados e reconhecimento em tempo real de Língua de Sinais Turca. Supera modelos existentes em usabilidade e performance.",
-    tags: ["GUI", "Turquia", "TSL", "Inovação"], adherence: "Alta"
+    tags: ["GUI", "Turquia", "TSL", "Inovação"], adherence: "Alta", hasAI: true, source: "scopus"
   },
   {
     id: 118, title: "RF-ChessSIGN: Radar-enabled HCI in a Real-Time Sign Language-Controlled Game",
     authors: "Dehaan K. et al.", year: 2025, category: "game", languages: ["ASL (Americana)"], tech: ["Radar (RF)", "Game Interface", "HCI"],
     abstract: "Jogo de xadrez controlado por sinais de radar. A interface gamificada permite coletar dados de sinais naturais sem as restrições de laboratórios, revelando nuances da sinalização real.",
-    tags: ["Radar", "Xadrez", "Gamificação", "HCI"], adherence: "Alta"
+    tags: ["Radar", "Xadrez", "Gamificação", "HCI"], adherence: "Alta", hasAI: true, source: "scopus"
   },
   {
     id: 119, title: "SCAI-net: Spatial-channel attention Inception-net for Medical Issues",
     authors: "Autores diversos", year: 2025, category: "comunicacao", languages: ["ISL (Indiana)"], tech: ["GUI Prototype", "Inception V3", "Saúde"],
     abstract: "Protótipo de interface gráfica amigável para facilitar a comunicação entre pacientes surdos e provedores de saúde, focando em termos médicos e condições clínicas através de ISL.",
-    tags: ["Saúde", "ISL", "GUI", "Médico"], adherence: "Alta"
+    tags: ["Saúde", "ISL", "GUI", "Médico"], adherence: "Alta", hasAI: true, source: "scopus"
   },
   {
     id: 120, title: "Vision-based Real-Time Gesture-to-Speech Translation",
     authors: "Autores diversos", year: 2025, category: "comunicacao", languages: ["ASL", "ISL"], tech: ["GUI Prototype", "CNN", "pyttsx3"],
     abstract: "Conversor de gestos para fala otimizado para baixa demanda computacional. Validado através de um protótipo de interface gráfica (GUI) em tempo real que supera técnicas existentes em velocidade.",
-    tags: ["GUI", "Fala", "Velocidade", "HCI"], adherence: "Alta"
+    tags: ["GUI", "Fala", "Velocidade", "HCI"], adherence: "Alta", hasAI: true, source: "scopus"
   },
-
-  // --- ARTIGOS ANTERIORES (MANUS) ---
   {
     id: 1, title: "Design and development of sign language questionnaires based on video and web interfaces",
     authors: "López J.P. et al.", year: 2019, category: "avaliacao", languages: ["Língua de Sinais (geral)"], tech: ["Interface Web", "Vídeo", "HTML5"],
     abstract: "Propõe questionários online em língua de sinais baseados em vídeo. O sistema apresenta vídeos e permite interação do usuário, gerando estatísticas automáticas e reduzindo custos com intérpretes.",
-    tags: ["Web", "Avaliação", "Questionário"], adherence: "Muito alta"
+    tags: ["Web", "Avaliação", "Questionário"], adherence: "Muito alta", hasAI: false, source: "scopus"
   },
   {
     id: 2, title: "Enhancing Sign Language Teaching: A Mixed Reality Approach",
     authors: "Wen H. et al.", year: 2024, category: "ensino", languages: ["Língua de Sinais (geral)"], tech: ["Realidade Mista", "Feedback Multidimensional"],
     abstract: "Abordagem de realidade mista para aprendizado imersivo com feedback multidimensional, superando as limitações de recursos 2D e a escassez de professores.",
-    tags: ["MR", "Ensino", "Imersivo", "Feedback"], adherence: "Muito alta"
+    tags: ["MR", "Ensino", "Imersivo", "Feedback"], adherence: "Muito alta", hasAI: true, source: "scopus"
   },
   {
     id: 3, title: "Adventure ASL: A Serious Game for Practicing ASL Fingerspelling",
     authors: "Inoc A.C. et al.", year: 2025, category: "game", languages: ["ASL", "TSL"], tech: ["Jogo Sério", "Webcam", "Python"],
     abstract: "Jogo 2D onde jogadores derrotam monstros soletrando palavras em ASL via webcam. Integra reconhecimento de gestos em uma interface lúdica de aventura.",
-    tags: ["Jogo Sério", "ASL", "Gamificação", "Webcam"], adherence: "Muito alta"
+    tags: ["Jogo Sério", "ASL", "Gamificação", "Webcam"], adherence: "Muito alta", hasAI: true, source: "scopus"
   },
   {
     id: 5, title: "Joint Bilingual Navigation of Informed Consent and Intake Forms",
     authors: "Seita M. et al.", year: 2025, category: "avaliacao", languages: ["ASL"], tech: ["Interface Bilíngue", "Touchscreen"],
-    abstract: "Conceito de 'navegação bilíngue conjunta' para formulários médicos. Permite interagir via sinais na câmera ou touchscreen em inglês, garantindo acessibilidade em hospitais.",
-    tags: ["Saúde", "Bilíngue", "Formulário", "Touch"], adherence: "Muito alta"
+    abstract: "Conceito de 'navegação bilíngue conjunta' para formulários médicos. Permite interagir via sinais na câmera ou touchscreen em inglês, gerando acessibilidade em hospitais.",
+    tags: ["Saúde", "Bilíngue", "Formulário", "Touch"], adherence: "Muito alta", hasAI: true, source: "scopus"
   },
   {
     id: 6, title: "Towards an AI-based Sign Language Video Editing Interface",
     authors: "Ranjbar H. et al.", year: 2025, category: "comunicacao", languages: ["Língua de Sinais (geral)"], tech: ["Edição de Vídeo", "IA Generativa"],
     abstract: "Ferramenta que simplifica a auto-edição de vídeos sinalizados, permitindo substituir segmentos gravando correções. Avaliada com usuários nativos (SUS 51).",
-    tags: ["Edição", "Vídeo", "IA", "UX"], adherence: "Alta"
+    tags: ["Edição", "Vídeo", "IA", "UX"], adherence: "Alta", hasAI: true, source: "scopus"
   },
   {
     id: 9, title: "SignFlow: Multilingual ISL Paragraph Translator with Virtual Assistant",
     authors: "Sahu M. et al.", year: 2025, category: "comunicacao", languages: ["ISL (Indiana)"], tech: ["Assistente Virtual", "NLP", "Multilíngue"],
     abstract: "Tradutor de parágrafos ISL com assistente virtual. Converte sinais em texto/fala em Inglês, Hindi e Marathi, com interface interativa de perguntas e respostas.",
-    tags: ["Assistente", "ISL", "Multilíngue", "NLP"], adherence: "Alta"
+    tags: ["Assistente", "ISL", "Multilíngue", "NLP"], adherence: "Alta", hasAI: true, source: "scopus"
   },
   {
     id: 13, title: "MyVoice: A Real-Time Arabic Sign Language Recognition System",
     authors: "Al-Ajji A. et al.", year: 2025, category: "comunicacao", languages: ["ArSL (Árabe)"], tech: ["GUI", "XGBoost", "TTS"],
     abstract: "Sistema MyVoice com GUI intuitiva para hospitais e escolas. Converte gestos ArSL em texto ou fala árabe, permitindo escolha entre caracteres ou palavras-chave.",
-    tags: ["ArSL", "Árabe", "Saúde", "GUI"], adherence: "Alta"
+    tags: ["ArSL", "Árabe", "Saúde", "GUI"], adherence: "Alta", hasAI: true, source: "scopus"
   }
 ];
 
@@ -565,16 +675,21 @@ function getCatLabel(cat) {
   return map[cat] || cat;
 }
 
-function renderArticles(data) {
-  const list = document.getElementById("articlesList");
-  document.getElementById("resultsCount").textContent = data.length + " artigo" + (data.length !== 1 ? "s" : "");
+function renderArticles(data, targetId = "articlesList") {
+  const list = document.getElementById(targetId);
+  if (targetId === "articlesList") {
+    document.getElementById("resultsCount").textContent = data.length + " artigo" + (data.length !== 1 ? "s" : "");
+  }
   list.innerHTML = data.map((a, i) => `
     <div class="article-card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem">
-        <span class="cat-badge cat-${a.category}">${getCatLabel(a.category)}</span>
+        <div>
+          <span class="source-badge src-${a.source}">${a.source === 'scopus' ? 'Scopus' : 'Web of Science'}</span>
+          <span class="cat-badge cat-${a.category}">${getCatLabel(a.category)}</span>
+        </div>
         <span style="font-size:0.8rem;color:var(--muted);font-weight:700">📅 ${a.year}</span>
       </div>
-      <h3>${a.title} ${a.adherence ? `<span class="adh-badge adh-${a.adherence.toLowerCase().replace(' ', '-')}">${a.adherence}</span>` : ''}</h3>
+      <h3>${a.title} ${a.adherence ? `<span class="adh-badge adh-${a.adherence.toLowerCase().replace(' ', '-')}">${a.adherence}</span>` : ''} ${a.hasAI ? '<span class="ia-badge">🤖 IA</span>' : ''}</h3>
       <div class="article-meta">
         <span>👤 ${a.authors}</span>
         <span>🌍 ${a.languages.join(", ")}</span>
@@ -596,17 +711,18 @@ function toggleAbstract(id) {
   btn.textContent = el.classList.contains("expanded") ? "▲ Ver menos" : "▼ Ver mais";
 }
 
-function filterArticles() {
+function filterArticles(targetId = "articlesList", sourceFilter = "all") {
   const q = document.getElementById("searchInput").value.toLowerCase();
   const cat = document.getElementById("catFilter").value;
   const year = document.getElementById("yearFilter").value;
   const filtered = articles.filter(a => {
+    const matchSource = sourceFilter === "all" || a.source === sourceFilter;
     const matchQ = !q || a.title.toLowerCase().includes(q) || a.authors.toLowerCase().includes(q) || a.languages.join(" ").toLowerCase().includes(q) || a.abstract.toLowerCase().includes(q) || a.tech.join(" ").toLowerCase().includes(q);
     const matchCat = !cat || a.category === cat;
     const matchYear = !year || a.year === parseInt(year);
-    return matchQ && matchCat && matchYear;
+    return matchSource && matchQ && matchCat && matchYear;
   });
-  renderArticles(filtered);
+  renderArticles(filtered, targetId);
 }
 
 // ===================== CHARTS =====================
@@ -616,36 +732,45 @@ function initCharts() {
   // Category
   new Chart(document.getElementById("chartCategory"), {
     type:"doughnut",
-    data:{ labels: ["Comunicação/Tradução","Ensino/Aprendizagem","Jogos/Gamificação","Avaliação/Formulários","Robótica"], datasets:[{data:[24,18,4,2,1],backgroundColor:COLORS}] },
+    data:{ labels: ["Comunicação/Tradução","Ensino/Aprendizagem","Jogos/Gamificação","Avaliação/Formulários","Robótica"], datasets:[{data:[28,22,4,2,1],backgroundColor:COLORS}] },
     options:{plugins:{legend:{position:"bottom"}},responsive:true}
   });
 
   // Year
   new Chart(document.getElementById("chartYear"), {
     type:"bar",
-    data:{ labels: ["2018","2019","2020","2021","2022","2023","2024","2025","2026"], datasets:[{label:"Artigos",data:[2,2,3,2,2,2,8,22,5],backgroundColor:"#1a56db",borderRadius:6}] },
+    data:{ labels: ["2018","2019","2020","2021","2022","2023","2024","2025","2026"], datasets:[{label:"Artigos",data:[2,3,4,2,4,3,10,24,4],backgroundColor:"#1a56db",borderRadius:6}] },
     options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}},responsive:true}
   });
 
   // Language
   new Chart(document.getElementById("chartLanguage"), {
     type:"pie",
-    data:{ labels:["ASL (Americana)","ISL (Indiana)","Libras (Brasileira)","LIS (Italiana)","Língua de Sinais (geral)","Outras Regionais"], datasets:[{data:[15,8,4,3,10,8],backgroundColor:COLORS}] },
+    data:{ labels:["ASL (Americana)","ISL (Indiana)","Libras (Brasileira)","LIS (Italiana)","Língua de Sinais (geral)","Outras Regionais"], datasets:[{data:[16,8,5,4,12,11],backgroundColor:COLORS}] },
     options:{plugins:{legend:{position:"bottom"}},responsive:true}
   });
 
   // Tech
   new Chart(document.getElementById("chartTech"), {
     type:"bar",
-    data:{ labels:["GUI / Desktop","WebApp / Web","Mobile App","Avatar 3D/2D","VR / AR / MR","IoT / Wearables","IA Generativa"], datasets:[{data:[18,12,8,7,6,4,3],backgroundColor:COLORS,borderRadius:5}] },
+    data:{ labels:["GUI / Desktop","WebApp / Web","Mobile App","Avatar 3D/2D","VR / AR / MR","IoT / Wearables","IA Generativa"], datasets:[{data:[20,14,10,8,7,6,4],backgroundColor:COLORS,borderRadius:5}] },
     options:{indexAxis:"y",plugins:{legend:{display:false}},responsive:true}
   });
 
   // Output
   new Chart(document.getElementById("chartOutput"), {
     type:"bar",
-    data:{ labels:["Texto","Fala/Áudio","Animação/Avatar","GIF/Vídeo","Feedback Tátil/HCI"], datasets:[{label:"Artigos",data:[35,22,10,8,5],backgroundColor:COLORS,borderRadius:8}] },
+    data:{ labels:["Texto","Fala/Áudio","Animação/Avatar","GIF/Vídeo","Feedback Tátil/HCI"], datasets:[{label:"Artigos",data:[40,25,12,10,6],backgroundColor:COLORS,borderRadius:8}] },
     options:{plugins:{legend:{display:false}},responsive:true}
+  });
+
+  // AI Usage
+  const aiCount = articles.filter(a => a.hasAI).length;
+  const noAiCount = articles.length - aiCount;
+  new Chart(document.getElementById("chartAI"), {
+    type:"doughnut",
+    data:{ labels: [`Com IA (${aiCount})`,`Sem IA (${noAiCount})`], datasets:[{data:[aiCount,noAiCount],backgroundColor:["#f59e0b","#cbd5e1"]}] },
+    options:{plugins:{legend:{position:"bottom"}},responsive:true}
   });
 }
 
@@ -658,7 +783,9 @@ function showSection(id) {
 }
 
 // ===================== INIT =====================
-renderArticles(articles);
+renderArticles(articles, "articlesList");
+renderArticles(articles.filter(a => a.source === "scopus"), "scopusList");
+renderArticles(articles.filter(a => a.source === "wos"), "wosList");
 initCharts();
 </script>
 </body>
